@@ -1,0 +1,111 @@
+{
+	"info": {
+		"_postman_id": "62a5e4ef-6b4e-4ba3-92d0-7d1a19f7266b",
+		"name": "node-dynamo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/user",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"ankit2.com\",\n    \"desc\":\"someopass\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/user/register",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateDynamnicUserTable",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"app_id\": \"9777dc5e-051f-4251-8d46-d5e398824287\",\n    \"dynamicTable\": \"shorya1\",\n    \"dynamicColumns\":[\"fname\",\"lname\",\"address\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/user/create-dynamnic-table",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"user",
+						"create-dynamnic-table"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "InsertUpdateDynamnicTable",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"dynamicTable\": \"shorya1\",\n    \"app_id\": \"9777dc5e-051f-4251-8d46-d5e398824287\",\n    \"data\": {\n        \"fname\": \"shorya\",\n        \"lname\": \"saxenba\",\n        \"tt\":\"rrr333\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/user/insert-update-dynamnic-table",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"user",
+						"insert-update-dynamnic-table"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
