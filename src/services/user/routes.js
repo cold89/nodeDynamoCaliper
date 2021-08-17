@@ -35,7 +35,7 @@ routes.post('/insert-update-dynamnic-table',async(req,res)=>{
 
 routes.put('/insert-update-dynamnic-table',async(req,res)=>{
     try {
-        let result= await userController.insertDynamicSubUserData(req.body);
+        let result= await userController.updateDynamicSubUserData(req.body);
         res.status(200).json({msg :`User Updated Succfully`,response:result})
     } catch (error) {
         res.status(500).json(error)
