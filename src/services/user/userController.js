@@ -83,6 +83,7 @@ const createDynamicSubUserData=async (params)=>{
 
     const updateDynamicSubUserData=async (params)=>{
         try{
+            return `inProgress`;
         let dynamicPrimaryKey=uuidv4();
         let reqItemObj=params.data;
         let dynamicColumnsObj={
