@@ -1,5 +1,8 @@
 const fs = require('fs');
+const request= require('request');
 const AWS = require("aws-sdk");
+const { resolve } = require('path');
+const { rejects } = require('assert');
 AWS.config.update({
     region: "us-east-1"
   });
@@ -8,7 +11,10 @@ const dynamodbClient = new AWS.DynamoDB.DocumentClient();
 
 const dynamodb = new AWS.DynamoDB();
 
-const s3= new AWS.S3();
+const s3= new AWS.S3({
+  region: "us-east-1"
+});
+
 const registerUserData=async (paramsData)=>{
     try {
         let params = {
@@ -101,27 +107,46 @@ const registerUserData=async (paramsData)=>{
     }
 }
 
-  const uploadS3Bucket=async(paramsObj)=>{
+const checkCreates3Bucket=async (bucketName) => {//if bucket not created it will create bucket
+  try {
+    return await s3.createBucket({Bucket:bucketName}).promise();
+  } catch (error) {
+    throw error;
+  }
+}   
+const uploadS3Bucket=async({params,bucketName})=>{
       try {
         
       // Read content from the file
-    const fileContent = fs.readFileSync(paramsObj.s3File);
+    const fileWriteStream = fs.createWriteStream("file.jpg");
+    const fileData= await request(params.data.s3File).pipe(fileWriteStream);
 
     // Setting up S3 upload parameters
     const paramsData = {
-      Bucket: paramsObj.bucketName,
-      Key: 'cat.jpg', // File name you want to save as in S3
-      Body: fileContent
+      Bucket: bucketName,
+      Key: `cet.jpg`, // File name you want to save as in S3
+      Body: fileData
     };
 
-    let respData=s3.upload(paramsData).promise();
-     return respData|| [];
+    let respData=await s3.upload(paramsData).promise();
+    return respData || [];
     } catch (error) {
         throw error;
     }
     
     }
 
+    const test= (paramsData)=>{
+      return new Promise((resolve,rejects)=>{
+
+        s3.upload(paramsData,err=>{
+          if(err){
+            rejects(err)
+          }
+          resolve("ss")
+        })
+      });
+    }
 
     module.exports={
         registerUserData,
@@ -130,5 +155,6 @@ const registerUserData=async (paramsData)=>{
         insertRowData,
         queryData,
         updateRowData,
+        checkCreates3Bucket,
         uploadS3Bucket
     }

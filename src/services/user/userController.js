@@ -83,8 +83,10 @@ const createDynamicSubUserData=async (params)=>{
 
     const updateDynamicSubUserData=async (params)=>{
         try{
-            return `inProgress`;
-        let dynamicPrimaryKey=uuidv4();
+            
+            await uploads3Bucket(params);
+            return;
+        let dynamicPrimaryKey=params.uuid;
         let reqItemObj=params.data;
         let dynamicColumnsObj={
             Item: {
@@ -94,11 +96,13 @@ const createDynamicSubUserData=async (params)=>{
             TableName: params.dynamicTable
         };
 
-        // await uploads3Bucket(params.data.s3File);
-        // return;
+       
         let checkAuthroizedUserData= await checkAuthroizedUser(params);
         let responseDetail=`unauthrozed User`;
         if(checkAuthroizedUserData.length){
+            if(params.data.s3File){//will update the s3 bucket
+                await uploads3Bucket(params);
+            }
             let UpdateExpression=``; 
             let dataMain= Object.keys(params.data);
             let ExpressionAttributeValues= dataMain.map((d,i)=> {
@@ -126,9 +130,9 @@ const createDynamicSubUserData=async (params)=>{
 
     }
 
-    const uploads3Bucket = async(s3File)=>{
+    const uploads3Bucket = async(params)=>{
     try {
-        let respData= await userProvider.uploadS3Bucket({s3File:s3File,bucketName:`Test`});
+        let respData= await userProvider.uploadS3Bucket({params,bucketName:`nodedynamocaliper`});
         return respData;
     } catch (error) {
     throw error;
