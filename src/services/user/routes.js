@@ -42,6 +42,14 @@ routes.put('/insert-update-dynamnic-table',async(req,res)=>{
     }
 });
 
+routes.post('/authenticate',async(req,res)=>{
+    try {
+        let result= await userController.authenticate(req.body.app_id);
+        res.status(200).json({msg :`User Updated Succfully`,response:result})
+    } catch (error) {
+        res.status(500).json(error)
+    }
+});
 
 module.exports={
     routes,

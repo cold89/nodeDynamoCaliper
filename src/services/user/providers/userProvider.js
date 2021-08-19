@@ -19,7 +19,8 @@ const registerUserData=async (paramsData)=>{
             Item: {
               app_id:paramsData.appId, 
               app_name: paramsData.app_name,
-              app_desc:paramsData.app_desc
+              app_desc:paramsData.app_desc,
+              authToken:paramsData.authToken
             },
             TableName: `apps`,
           };

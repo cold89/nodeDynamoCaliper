@@ -1,10 +1,17 @@
 const { v4: uuidv4 } = require('uuid');
 
+const config = require('../../config.json');
+const jwt = require('jsonwebtoken');
+
 const userProvider=require('./providers/userProvider');
+const e = require('express');
 
 const registerUserData=async (params)=>{
 try {
-    return await userProvider.registerUserData({appId:uuidv4(),...params});
+    let app_id=uuidv4();
+    let tokenDetail=await createJwtToken(app_id);
+    await userProvider.registerUserData({appId:app_id,authToken:tokenDetail.token,...params});
+    return {appId:app_id,authToken:tokenDetail.token}
 } catch (error) {
     throw error
 }
@@ -20,7 +27,11 @@ const createDynamicSubUserData=async (params)=>{
             AttributeType:"S"
                 
         };
-        
+        let authToken=params.token;
+
+        let authenticated=await authenticate(params.app_id,authToken);
+        console.log(authenticated)
+        return;
          await userProvider.createDynamicHashKeyTable(paramsReq);//will create dynamic table
          let itemObj= {};
          params.dynamicColumns.map((d)=> {
@@ -158,12 +169,42 @@ const createDynamicSubUserData=async (params)=>{
             throw error;
         }
     }
-   
+
+    const createJwtToken= async ({ app_id }) =>{
+        
+        // create a jwt token that is valid for 7 days
+          // create a jwt token that is valid for 7 days
+     try {
+        const token = jwt.sign({ appId: "shorys" }, config.secret);
+        return {
+            token
+        };
+    } catch(err) {
+        throw err;
+      }
+    }  
+
+    const authenticate= async (pp_id,token ) =>{
+        
+       
+     // create a jwt token that is valid for 7 days
+       // create a jwt token that is valid for 7 days
+       try {
+        var decoded = jwt.verify(token, config.secret);
+        return decoded;
+      } catch(err) {
+        throw err;
+      }
+    }
+    
+
 
 module.exports={
     registerUserData,
     createDynamicSubUserData,
     insertDynamicSubUserData,
     updateDynamicSubUserData,
-    checkAuthroizedUser
+    checkAuthroizedUser,
+    createJwtToken,
+    authenticate
 }
