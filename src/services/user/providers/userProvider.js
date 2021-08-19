@@ -17,7 +17,7 @@ const registerUserData=async (paramsData)=>{
     try {
         let params = {
             Item: {
-              app_id:paramsData.appId, 
+              app_id:paramsData.app_id, 
               app_name: paramsData.app_name,
               app_desc:paramsData.app_desc,
               authToken:paramsData.authToken

@@ -4,21 +4,25 @@ const config = require('../../config.json');
 const jwt = require('jsonwebtoken');
 
 const userProvider=require('./providers/userProvider');
-const e = require('express');
+
 
 const registerUserData=async (params)=>{
 try {
     let app_id=uuidv4();
     let tokenDetail=await createJwtToken(app_id);
-    await userProvider.registerUserData({appId:app_id,authToken:tokenDetail.token,...params});
-    return {appId:app_id,authToken:tokenDetail.token}
+    await userProvider.registerUserData({app_id:app_id,authToken:tokenDetail.token,...params});
+    return {app_id:app_id,authToken:tokenDetail.token}
 } catch (error) {
     throw error
 }
 }
 
-const createDynamicSubUserData=async (params)=>{
+const createDynamicSubUserData=async (params,authToken)=>{
     try {
+        
+        let authenticated=await authenticate(authToken);//will automatic throw error
+        let app_id=authenticated.app_id;
+
         let dynamicPrimaryKey=uuidv4();
         let paramsReq={
             tableName:params.dynamicTable,
@@ -27,11 +31,6 @@ const createDynamicSubUserData=async (params)=>{
             AttributeType:"S"
                 
         };
-        let authToken=params.token;
-
-        let authenticated=await authenticate(params.app_id,authToken);
-        console.log(authenticated)
-        return;
          await userProvider.createDynamicHashKeyTable(paramsReq);//will create dynamic table
          let itemObj= {};
          params.dynamicColumns.map((d)=> {
@@ -49,7 +48,7 @@ const createDynamicSubUserData=async (params)=>{
             TableName:`app_table_mapping`,
             Item:{
                 mapping_id:appMappingKey,
-                app_id:params.app_id,
+                app_id:app_id,
                 table_name:params.dynamicTable,
                 dynamic_uuid:dynamicPrimaryKey
             }
@@ -65,8 +64,12 @@ const createDynamicSubUserData=async (params)=>{
 
 
     
-    const insertDynamicSubUserData=async (params)=>{
+    const insertDynamicSubUserData=async (params,authToken)=>{
         try{
+        
+        let authenticated=await authenticate(authToken);//will automatic throw error
+        params.app_id=authenticated.app_id;   
+
         let dynamicPrimaryKey=uuidv4();
         let reqItemObj=params.data;
         let dynamicColumnsObj={
@@ -92,10 +95,11 @@ const createDynamicSubUserData=async (params)=>{
 
     }
 
-    const updateDynamicSubUserData=async (params)=>{
+    const updateDynamicSubUserData=async (params,authToken)=>{
         try{
             
-            
+        let authenticated=await authenticate(authToken);//will automatic throw error
+        params.app_id=authenticated;       
             // return await uploads3Bucket(params);
         let dynamicPrimaryKey=params.uuid;
         let reqItemObj=params.data;
@@ -153,7 +157,7 @@ const createDynamicSubUserData=async (params)=>{
 
     const checkAuthroizedUser= async(params)=>{
         try {
-        var paramsObj = {
+        let paramsObj = {
             TableName : `app_table_mapping`,
             FilterExpression: "#app_id=:app_id_value",
             ExpressionAttributeNames: {
@@ -161,36 +165,46 @@ const createDynamicSubUserData=async (params)=>{
             },
             ExpressionAttributeValues: {
                  ":app_id_value": params.app_id,
-            }
-            
+            }  
         };
-       return await userProvider.queryData(paramsObj);
+        let authData=await userProvider.queryData(paramsObj);
+        
+       if(!authData.length){
+         throw {message:`User do not have rights to any operation`}
+    }
+    return authData;
     } catch (error) {
             throw error;
         }
     }
 
-    const createJwtToken= async ({ app_id }) =>{
+    const createJwtToken= async (app_id) =>{
         
-        // create a jwt token that is valid for 7 days
-          // create a jwt token that is valid for 7 days
      try {
-        const token = jwt.sign({ appId: "shorys" }, config.secret);
-        return {
-            token
-        };
+        const token = jwt.sign({ app_id: app_id }, config.secret);
+        return {token};
     } catch(err) {
         throw err;
       }
     }  
 
-    const authenticate= async (pp_id,token ) =>{
-        
-       
-     // create a jwt token that is valid for 7 days
-       // create a jwt token that is valid for 7 days
+    const authenticate= async (token) =>{
        try {
-        var decoded = jwt.verify(token, config.secret);
+        let decoded = jwt.verify(token, config.secret);
+        let paramsObj = {
+            TableName : `apps`,
+            FilterExpression: "#app_id=:app_id_value",
+            ExpressionAttributeNames: {
+                "#app_id": "app_id",
+            },
+            ExpressionAttributeValues: {
+                 ":app_id_value": decoded.app_id,
+            }
+        };
+        let checkApiId= await userProvider.queryData(paramsObj);
+        if(!checkApiId.length){
+            throw {message:`Unauthroized User`};
+        }
         return decoded;
       } catch(err) {
         throw err;
