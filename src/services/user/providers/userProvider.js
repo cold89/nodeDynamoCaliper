@@ -113,27 +113,31 @@ const checkCreates3Bucket=async (bucketName) => {//if bucket not created it will
     throw error;
   }
 }   
+
+
 const uploadS3Bucket=async({params,bucketName})=>{
       try {
         
       // Read content from the file
     const fileWriteStream = fs.createWriteStream("file.jpg");
-    const fileData= await request(params.data.s3File).pipe(fileWriteStream);
+    await request(params.data.s3File).pipe(fileWriteStream);
+    let readStream = await fs.createReadStream("file.jpg");
 
     // Setting up S3 upload parameters
+    let s3PathArray=params.data.s3File.split('/');
+    let s3folderPath=`${params.app_id}/${params.uuid}/${s3PathArray[s3PathArray.length-1]}`
     const paramsData = {
       Bucket: bucketName,
-      Key: `ttt4.jpg`, // File name you want to save as in S3
-      Body: fileData,
+      Key: s3folderPath, // File name you want to save as in S3
+      Body: readStream,
       ACL:`public-read-write`
     };
     var options = {partSize: 10 * 1024 * 1024, queueSize: 1};
-let respData= await s3.upload(paramsData,options).promise();
-    // let respData=await new Promise((resolve, reject) => {
-    //   s3.upload({
-    //     ...paramsData
-    //   }, (err, data) => err == null ? resolve(data) : reject(err));
-    // });
+    let respData=await new Promise((resolve, reject) => {
+      s3.upload({
+        ...paramsData
+      }, (err, data) => err == null ? resolve(data) : reject(err));
+    });
     return respData || [];
     } catch (error) {
         throw error;
