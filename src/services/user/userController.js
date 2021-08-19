@@ -84,8 +84,8 @@ const createDynamicSubUserData=async (params)=>{
     const updateDynamicSubUserData=async (params)=>{
         try{
             
-            await uploads3Bucket(params);
-            return;
+            
+            // return await uploads3Bucket(params);
         let dynamicPrimaryKey=params.uuid;
         let reqItemObj=params.data;
         let dynamicColumnsObj={
@@ -101,21 +101,22 @@ const createDynamicSubUserData=async (params)=>{
         let responseDetail=`unauthrozed User`;
         if(checkAuthroizedUserData.length){
             if(params.data.s3File){//will update the s3 bucket
-                await uploads3Bucket(params);
+                // await uploads3Bucket(params);
             }
-            let UpdateExpression=``; 
+            let UpdateExpression=`set `; 
             let dataMain= Object.keys(params.data);
-            let ExpressionAttributeValues= dataMain.map((d,i)=> {
+            let ExpressionAttributeValues={}
+             dataMain.map((d,i)=> {
 
-                UpdateExpression+= `${d}= :p${i}, `
+                UpdateExpression+= `${d}= :p${i},`
 
-            return { ':p${i}':  params['data'][d]}
+                ExpressionAttributeValues= { [`:p${i}`]:  params['data'][d],...ExpressionAttributeValues}
             });
-
+            UpdateExpression =UpdateExpression.substring(0, UpdateExpression.length - 1);
             let dynamicObj={
                 TableName:params.dynamicTable,
                 Key:{
-                    "app_id": params.app_id
+                    "uuid": params.uuid
                 },
                 UpdateExpression,
                 ExpressionAttributeValues

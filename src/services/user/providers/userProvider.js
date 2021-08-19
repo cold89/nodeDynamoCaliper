@@ -11,9 +11,7 @@ const dynamodbClient = new AWS.DynamoDB.DocumentClient();
 
 const dynamodb = new AWS.DynamoDB();
 
-const s3= new AWS.S3({
-  region: "us-east-1"
-});
+const s3= new AWS.S3();
 
 const registerUserData=async (paramsData)=>{
     try {
@@ -91,7 +89,7 @@ const registerUserData=async (paramsData)=>{
   }
 
 
-  const updateRowData=async ({TableName,Key,uuid,UpdateExpression,ExpressionAttributeValues})=>{
+  const updateRowData=async ({TableName,Key,UpdateExpression,ExpressionAttributeValues})=>{
     try {
         let params = {
           TableName:TableName,
@@ -124,11 +122,17 @@ const uploadS3Bucket=async({params,bucketName})=>{
     // Setting up S3 upload parameters
     const paramsData = {
       Bucket: bucketName,
-      Key: `cet.jpg`, // File name you want to save as in S3
-      Body: fileData
+      Key: `ttt4.jpg`, // File name you want to save as in S3
+      Body: fileData,
+      ACL:`public-read-write`
     };
-
-    let respData=await s3.upload(paramsData).promise();
+    var options = {partSize: 10 * 1024 * 1024, queueSize: 1};
+let respData= await s3.upload(paramsData,options).promise();
+    // let respData=await new Promise((resolve, reject) => {
+    //   s3.upload({
+    //     ...paramsData
+    //   }, (err, data) => err == null ? resolve(data) : reject(err));
+    // });
     return respData || [];
     } catch (error) {
         throw error;
