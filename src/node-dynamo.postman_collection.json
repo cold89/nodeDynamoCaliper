@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "62a5e4ef-6b4e-4ba3-92d0-7d1a19f7266b",
+		"_postman_id": "5b70086c-eac6-4e39-9ab3-d4573ae1d14f",
 		"name": "node-dynamo",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -80,13 +80,41 @@
 			"response": []
 		},
 		{
-			"name": "InsertUpdateDynamnicTable",
+			"name": "InsertDynamnicTable",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"dynamicTable\": \"shorya1\",\n    \"app_id\": \"9777dc5e-051f-4251-8d46-d5e398824287\",\n    \"data\": {\n        \"fname\": \"shorya\",\n        \"lname\": \"saxenba\",\n        \"tt\":\"rrr333\"\n    }\n}",
+					"raw": "{\n    \"dynamicTable\": \"shorya1\",\n    \"app_id\": \"9777dc5e-051f-4251-8d46-d5e398824287\",\n    \"data\": {\n        \"fname\": \"shorya\",\n        \"lname\": \"saxenba\",\n        \"tt\":\"rrr333\",\n        \"s3File\":\"https://images.all-free-download.com/images/graphicthumb/naturex27s_canvas_513167.jpg\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/user/insert-update-dynamnic-table",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"user",
+						"insert-update-dynamnic-table"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateDynamnicTable",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"dynamicTable\": \"shorya1\",\n    \"app_id\": \"9777dc5e-051f-4251-8d46-d5e398824287\",\n    \"uuid\":\"6a056722-435a-43a1-9bec-a884912ac801\",\n    \"data\": {\n        \"fname\": \"shorya\",\n        \"lname\": \"saxenba\",\n        \"tt\":\"rrr333\",\n        \"s3File\":\"https://images.all-free-download.com/images/graphicthumb/naturex27s_canvas_513167.jpg\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"

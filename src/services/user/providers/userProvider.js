@@ -1,4 +1,8 @@
+const fs = require('fs');
+const request= require('request');
 const AWS = require("aws-sdk");
+const { resolve } = require('path');
+const { rejects } = require('assert');
 AWS.config.update({
     region: "us-east-1"
   });
@@ -7,13 +11,16 @@ const dynamodbClient = new AWS.DynamoDB.DocumentClient();
 
 const dynamodb = new AWS.DynamoDB();
 
+const s3= new AWS.S3();
+
 const registerUserData=async (paramsData)=>{
     try {
         let params = {
             Item: {
-              app_id:paramsData.appId, 
+              app_id:paramsData.app_id, 
               app_name: paramsData.app_name,
-              app_desc:paramsData.app_desc
+              app_desc:paramsData.app_desc,
+              authToken:paramsData.authToken
             },
             TableName: `apps`,
           };
@@ -59,51 +66,100 @@ const registerUserData=async (paramsData)=>{
       }
     }
 
-      const insertRowData=async (paramsData)=>{
-          try {
-              let params = {
-                  Item: paramsData.Item,
-                  ReturnConsumedCapacity: "TOTAL",
-                  TableName: paramsData.TableName,
-                };
-              return await dynamodbClient.put(params).promise();
-           
-          } catch (error) {
-              throw error
-          }
-      }
-
-      const queryData=async (paramsData)=>{
+    const queryData=async (paramsData)=>{
         try {
-            return   await  dynamodbClient.get(paramsData).promise();      
+            return   (await  dynamodbClient.scan(paramsData).promise())?.Items || [];      
         } catch (error) {
           throw error;
         }
+    }
+
+
+    const insertRowData=async (paramsData)=>{
+      try {
+          let params = {
+              Item: paramsData.Item,
+              ReturnConsumedCapacity: "TOTAL",
+              TableName: paramsData.TableName,
+            };
+          return await dynamodbClient.put(params).promise();
+       
+      } catch (error) {
+          throw error
       }
+  }
+
+
+  const updateRowData=async ({TableName,Key,UpdateExpression,ExpressionAttributeValues})=>{
+    try {
+        let params = {
+          TableName:TableName,
+          Key:Key,
+          UpdateExpression: UpdateExpression,
+          ExpressionAttributeValues:ExpressionAttributeValues,
+          ReturnValues:"UPDATED_NEW"
+      };
+        return (await dynamodbClient.update(params).promise())|| [];
+     
+    } catch (error) {
+        throw error
+    }
+}
+
+const checkCreates3Bucket=async (bucketName) => {//if bucket not created it will create bucket
+  try {
+    return await s3.createBucket({Bucket:bucketName}).promise();
+  } catch (error) {
+    throw error;
+  }
+}   
+const uploadS3Bucket=async({params,bucketName})=>{
+      try {
+        
+      // Read content from the file
+    const fileWriteStream = fs.createWriteStream("file.jpg");
+    const fileData= await request(params.data.s3File).pipe(fileWriteStream);
+
+    // Setting up S3 upload parameters
+    const paramsData = {
+      Bucket: bucketName,
+      Key: `ttt4.jpg`, // File name you want to save as in S3
+      Body: fileData,
+      ACL:`public-read-write`
+    };
+    var options = {partSize: 10 * 1024 * 1024, queueSize: 1};
+let respData= await s3.upload(paramsData,options).promise();
+    // let respData=await new Promise((resolve, reject) => {
+    //   s3.upload({
+    //     ...paramsData
+    //   }, (err, data) => err == null ? resolve(data) : reject(err));
+    // });
+    return respData || [];
+    } catch (error) {
+        throw error;
+    }
+    
+    }
+
+    const test= (paramsData)=>{
+      return new Promise((resolve,rejects)=>{
+
+        s3.upload(paramsData,err=>{
+          if(err){
+            rejects(err)
+          }
+          resolve("ss")
+        })
+      });
+    }
+
     module.exports={
         registerUserData,
         createDynamicHashKeyTable,
         createTableData,
         insertRowData,
-        queryData
+        queryData,
+        updateRowData,
+        checkCreates3Bucket,
+        uploadS3Bucket
     }
-
-
-
-        // var params = {
-    //     TableName : "TestAsync",
-    //     KeySchema: [       
-    //         { AttributeName: "year", KeyType: "HASH"},  //Partition key
-    //         { AttributeName: "title", KeyType: "RANGE" }  //Sort key
-    //     ],
-    //     AttributeDefinitions: [       
-    //         { AttributeName: "year", AttributeType: "N" },
-    //         { AttributeName: "title", AttributeType: "S" }
-    //     ],
-    //     ProvisionedThroughput: {       
-    //         ReadCapacityUnits: 10, 
-    //         WriteCapacityUnits: 10
-    //     }
-    // };
-
-

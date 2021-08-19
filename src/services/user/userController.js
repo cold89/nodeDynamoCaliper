@@ -1,17 +1,28 @@
 const { v4: uuidv4 } = require('uuid');
 
+const config = require('../../config.json');
+const jwt = require('jsonwebtoken');
+
 const userProvider=require('./providers/userProvider');
+
 
 const registerUserData=async (params)=>{
 try {
-    return await userProvider.registerUserData({appId:uuidv4(),...params});
+    let app_id=uuidv4();
+    let tokenDetail=await createJwtToken(app_id);
+    await userProvider.registerUserData({app_id:app_id,authToken:tokenDetail.token,...params});
+    return {app_id:app_id,authToken:tokenDetail.token}
 } catch (error) {
     throw error
 }
 }
 
-const createDynamicSubUserData=async (params)=>{
+const createDynamicSubUserData=async (params,authToken)=>{
     try {
+        
+        let authenticated=await authenticate(authToken);//will automatic throw error
+        let app_id=authenticated.app_id;
+
         let dynamicPrimaryKey=uuidv4();
         let paramsReq={
             tableName:params.dynamicTable,
@@ -20,7 +31,6 @@ const createDynamicSubUserData=async (params)=>{
             AttributeType:"S"
                 
         };
-        
          await userProvider.createDynamicHashKeyTable(paramsReq);//will create dynamic table
          let itemObj= {};
          params.dynamicColumns.map((d)=> {
@@ -38,7 +48,7 @@ const createDynamicSubUserData=async (params)=>{
             TableName:`app_table_mapping`,
             Item:{
                 mapping_id:appMappingKey,
-                app_id:params.app_id,
+                app_id:app_id,
                 table_name:params.dynamicTable,
                 dynamic_uuid:dynamicPrimaryKey
             }
@@ -52,9 +62,14 @@ const createDynamicSubUserData=async (params)=>{
     }
     }
 
+
     
-    const insertDynamicSubUserData=async (params)=>{
+    const insertDynamicSubUserData=async (params,authToken)=>{
         try{
+        
+        let authenticated=await authenticate(authToken);//will automatic throw error
+        params.app_id=authenticated.app_id;   
+
         let dynamicPrimaryKey=uuidv4();
         let reqItemObj=params.data;
         let dynamicColumnsObj={
@@ -64,71 +79,146 @@ const createDynamicSubUserData=async (params)=>{
             },
             TableName: params.dynamicTable
         };
-        let checkAuthroizedUserData= await checkAuthroizedUser(params);
-        return true;
-        let respData=await userProvider.insertRowData(dynamicColumnsObj);
-        return {processData:dynamicColumnsObj,...respData};
 
+        // await uploads3Bucket(params.data.s3File);
+        // return;
+        let checkAuthroizedUserData= await checkAuthroizedUser(params);
+        let responseDetail=`unauthrozed User`;
+        if(checkAuthroizedUserData.length){
+             let insertedData=await userProvider.insertRowData(dynamicColumnsObj);
+             responseDetail= {processData:dynamicColumnsObj,...insertedData};
+        }
+        return responseDetail;
     } catch (error) {
         throw error
     }
 
     }
 
+    const updateDynamicSubUserData=async (params,authToken)=>{
+        try{
+            
+        let authenticated=await authenticate(authToken);//will automatic throw error
+        params.app_id=authenticated;       
+            // return await uploads3Bucket(params);
+        let dynamicPrimaryKey=params.uuid;
+        let reqItemObj=params.data;
+        let dynamicColumnsObj={
+            Item: {
+                ...reqItemObj,
+                uuid:dynamicPrimaryKey
+            },
+            TableName: params.dynamicTable
+        };
+
+       
+        let checkAuthroizedUserData= await checkAuthroizedUser(params);
+        let responseDetail=`unauthrozed User`;
+        if(checkAuthroizedUserData.length){
+            if(params.data.s3File){//will update the s3 bucket
+                // await uploads3Bucket(params);
+            }
+            let UpdateExpression=`set `; 
+            let dataMain= Object.keys(params.data);
+            let ExpressionAttributeValues={}
+             dataMain.map((d,i)=> {
+
+                UpdateExpression+= `${d}= :p${i},`
+
+                ExpressionAttributeValues= { [`:p${i}`]:  params['data'][d],...ExpressionAttributeValues}
+            });
+            UpdateExpression =UpdateExpression.substring(0, UpdateExpression.length - 1);
+            let dynamicObj={
+                TableName:params.dynamicTable,
+                Key:{
+                    "uuid": params.uuid
+                },
+                UpdateExpression,
+                ExpressionAttributeValues
+            }
+             let updateData=await userProvider.updateRowData(dynamicObj);
+             responseDetail= {processData:dynamicColumnsObj,...updateData};
+        }
+        return responseDetail;
+    } catch (error) {
+        throw error
+    }
+
+    }
+
+    const uploads3Bucket = async(params)=>{
+    try {
+        let respData= await userProvider.uploadS3Bucket({params,bucketName:`nodedynamocaliper`});
+        return respData;
+    } catch (error) {
+    throw error;
+    }
+    }
+
     const checkAuthroizedUser= async(params)=>{
         try {
-            
-        var paramsObj = {
+        let paramsObj = {
             TableName : `app_table_mapping`,
-            Key: {
-              
-                "table_name": params.dynamicTable
-               }
+            FilterExpression: "#app_id=:app_id_value",
+            ExpressionAttributeNames: {
+                "#app_id": "app_id",
+            },
+            ExpressionAttributeValues: {
+                 ":app_id_value": params.app_id,
+            }  
         };
-        let data = await userProvider.queryData(paramsObj);
-        return data;
+        let authData=await userProvider.queryData(paramsObj);
+        
+       if(!authData.length){
+         throw {message:`User do not have rights to any operation`}
+    }
+    return authData;
     } catch (error) {
             throw error;
         }
     }
-    // const createDynamicMappingData=async (paramsObj)=>{
-    //     try {
-    //        //@toDO
-    //               //@toDO
-    //     // let paramsReq={
-    //     //     tableName:params.dynamicTable,
-    //     //     KeySchema: params.dynamicColumns.map((d)=> {
-    //     //         return { AttributeName:d, KeyType:"HASH"}
-    //     //         }),
-    //     //     AttributeDefinitions: params.dynamicColumns.map((d)=> {
-    //     //             return { AttributeName:d, AttributeType:"S"}
-    //     //             })    
-    //     // };
-    //        let tableName=`${paramsObj.appId}_${paramsObj.dynamicTable}`;
-    //         let paramsReq={
-    //             TableName:tableName,
-    //             KeySchema: [       
-    //                         { AttributeName: "userAppId", KeyType: "HASH"},  //Partition key
-    //                         { AttributeName: "dynamicTableKey", KeyType: "RANGE" }  //Sort key
-    //                     ],
-    //                     AttributeDefinitions: [       
-    //                         { AttributeName: "userAppId", AttributeType: "S" },
-    //                         { AttributeName: "dynamicTableKey", AttributeType: "S" }
-    //                     ]
-    //         };
-            
-    //         await userProvider.createTableData(paramsReq);
-    //         return true;
+
+    const createJwtToken= async (app_id) =>{
+        
+     try {
+        const token = jwt.sign({ app_id: app_id }, config.secret);
+        return {token};
+    } catch(err) {
+        throw err;
+      }
+    }  
+
+    const authenticate= async (token) =>{
+       try {
+        let decoded = jwt.verify(token, config.secret);
+        let paramsObj = {
+            TableName : `apps`,
+            FilterExpression: "#app_id=:app_id_value",
+            ExpressionAttributeNames: {
+                "#app_id": "app_id",
+            },
+            ExpressionAttributeValues: {
+                 ":app_id_value": decoded.app_id,
+            }
+        };
+        let checkApiId= await userProvider.queryData(paramsObj);
+        if(!checkApiId.length){
+            throw {message:`Unauthroized User`};
+        }
+        return decoded;
+      } catch(err) {
+        throw err;
+      }
+    }
     
-    //     } catch (error) {
-    //         throw error
-    //     }
-    //     }    
+
 
 module.exports={
     registerUserData,
     createDynamicSubUserData,
     insertDynamicSubUserData,
-    // updateDynamicSubUserData,
-    checkAuthroizedUser
+    updateDynamicSubUserData,
+    checkAuthroizedUser,
+    createJwtToken,
+    authenticate
 }
