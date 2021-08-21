@@ -79,6 +79,9 @@ const insertDynamicSubUserData = async (params, authToken) => {
         let responseDetail = `unauthrozed User`;
 
         if (checkAuthroizedUserData.length) {
+            if (params.data.s3File) {//will update the s3 bucket
+                await uploads3Bucket({uuid:dynamicPrimaryKey,...params});
+            }
             let insertedData = await userProvider.insertRowData(dynamicColumnsObj);
             responseDetail = { processData: dynamicColumnsObj, ...insertedData };
         }

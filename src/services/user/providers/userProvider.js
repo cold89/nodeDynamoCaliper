@@ -88,13 +88,12 @@ const registerUserData=async (paramsData)=>{
        let params = {
         TableName: tableName /* required */
     };
-    console.log(`checkTableExists--> start`)
-   let tableStatus= await dynamodb.describeTable(params).promise();
-   console.log(`checkTableExists--> Ebd`,tableStatus.Table.TableStatus)
+        console.log(`checkTableExists--> start`)
+      let tableStatus= await dynamodb.describeTable(params).promise();
+      console.log(`checkTableExists--> Ebd`,tableStatus.Table.TableStatus)
       return (tableStatus.Table.TableStatus==`ACTIVE`)?true:false;
        
       } catch (error) {
-        console.log(error,"_________")
           throw error
       }
       }
@@ -150,11 +149,12 @@ const checkCreates3Bucket=async (bucketName) => {//if bucket not created it will
 const uploadS3Bucket=async({params,bucketName})=>{
       try {
         
-      // Read content from the file
-    const fileWriteStream = fs.createWriteStream("file.jpg");
-    await request(params.data.s3File).pipe(fileWriteStream);
-    let readStream = await fs.createReadStream("file.jpg");
-
+    // Create the file and get Data from API and update the file with that API data   
+    let tempFileName=`file.jpg`;
+    await mainFunctionPromises(params,tempFileName);
+    
+    // Read content from the file
+    let readStream = await readStreamData(tempFileName);
     // Setting up S3 upload parameters
     let s3PathArray=params.data.s3File.split('/');
     let s3folderPath=`${params.app_id}/${params.uuid}/${s3PathArray[s3PathArray.length-1]}`
@@ -177,18 +177,54 @@ const uploadS3Bucket=async({params,bucketName})=>{
     
     }
 
-    const test= (paramsData)=>{
-      return new Promise((resolve,rejects)=>{
-
-        s3.upload(paramsData,err=>{
-          if(err){
-            rejects(err)
-          }
-          resolve("ss")
-        })
-      });
+    const mainFunctionPromises =async (params,tempFileName)=>{
+      try {
+        return new Promise((resolve, _rejects) => {
+          requestApi(params, tempFileName).then(data => {
+            resolve(data);
+          });
+        });
+      } catch (err) {
+        _rejects(err);
+      }
     }
 
+    const requestApi=(params,tempFileName)=>{
+      return new Promise((resolve,rejects)=>{
+        const fileWriteStream = fs.createWriteStream(tempFileName);
+      let writeStreamData = request(params.data.s3File).pipe(fileWriteStream);
+      writeStreamData.on('close',(data)=>{
+        console.log('request finished downloading file');
+        resolve(data);
+      });
+        
+      });
+    };
+
+    const readStreamData=(fileName)=>{
+      return new Promise((resolve,rejects)=>{
+        let readStream=fs.createReadStream(fileName);
+        let chunks = [];
+        readStream.on('data', function (chunk) {
+          chunks.push(chunk);
+        });
+
+        // File is done being read
+        readStream.on('end', () => {
+          // Create a buffer of the image from the stream
+          resolve(Buffer.concat(chunks));
+      });
+       
+      
+        // This catches any errors that happen while creating the readable stream (usually invalid names)
+        readStream.on('error', function(err) {
+          rejects(err);
+        });
+
+      });
+    };
+
+  
     module.exports={
         registerUserData,
         createDynamicHashKeyTable,
