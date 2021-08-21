@@ -30,7 +30,6 @@ const createDynamicSubUserData = async (params, authToken) => {
 
         };
         await userProvider.createDynamicHashKeyTable(paramsReq);//will create dynamic table
-
         let itemObj = {};
         params.dynamicColumns.map((d) => {
             itemObj[d] = ``

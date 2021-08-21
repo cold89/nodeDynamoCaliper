@@ -58,14 +58,46 @@ const registerUserData=async (paramsData)=>{
               WriteCapacityUnits: 10
         }
       }
-            let res= await dynamodb.createTable(params).promise();
-          return res;
-       
+            console.log(`createTableData- >> start`);
+            await dynamodb.createTable(params).promise();
+            console.log(`createTableData- >> END`);
+            let dataMain = await sleep(paramsData);
+       return dataMain;
       } catch (error) {
           throw error
       }
     }
 
+    const sleep= (paramsData)=> {
+      return new Promise((resolve) => {
+        let intervalId=setInterval(async() => {
+          console.log(`setInterval-->Start`)
+           let tableStatus= await checkTableExists(paramsData.TableName);
+          console.log(`${paramsData.TableName}tableStatus`,tableStatus);
+          if(tableStatus){
+            clearInterval(intervalId)
+            console.log(`setInterval-->Completed`);
+            resolve(true);
+          }
+          console.log(`setInterval-->END`)
+        }, 3000)
+      })
+    }
+    const checkTableExists=async (tableName)=>{
+      try {
+       let params = {
+        TableName: tableName /* required */
+    };
+    console.log(`checkTableExists--> start`)
+   let tableStatus= await dynamodb.describeTable(params).promise();
+   console.log(`checkTableExists--> Ebd`,tableStatus.Table.TableStatus)
+      return (tableStatus.Table.TableStatus==`ACTIVE`)?true:false;
+       
+      } catch (error) {
+        console.log(error,"_________")
+          throw error
+      }
+      }
     const queryData=async (paramsData)=>{
         try {
             return   (await  dynamodbClient.scan(paramsData).promise())?.Items || [];      
@@ -167,3 +199,16 @@ const uploadS3Bucket=async({params,bucketName})=>{
         checkCreates3Bucket,
         uploadS3Bucket
     }
+
+    //Below Code for future references 
+     // let dataMain=require('util').promisify(setInterval(async() => {
+            //   console.log(`setInterval-->Start`)
+            //   let tableStatus= await checkTableExists(paramsData.TableName);
+            //   console.log(tableStatus,"_+__+_")
+            //   if(tableStatus){
+            //     console.log(`setInterval-->Completed`)
+            //     // clearInterval(intervalID);
+            //     return `Success`
+            //   }
+            //   console.log(`setInterval-->END`)
+            // }, 1000));
