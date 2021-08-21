@@ -168,7 +168,7 @@ const checkAuthroizedUser = async (params) => {
         if (!authData.length) {
             throw { message: `User do not have rights to any operation` }
         }
-        if (params?.dynamicTable && !authData.find((d)=> d.table_name==params?.dynamicTable)) {
+        if (params.dynamicTable && !authData.find((d)=> d.table_name==params.dynamicTable)) {
             throw { message: `User do not have rights to any operation on table ${params.dynamicTable}` }
         }
         return authData;

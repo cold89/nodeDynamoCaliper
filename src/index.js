@@ -5,9 +5,7 @@ const jwt = require('./_helpers/jwt');
 const errorHandler = require('./_helpers/error-handler');
 const app=express();
 
-const {
-    routes: userRoutes,
-} = require('./services/user/routes');
+const  userRoutes = require('./services/user/routes');
 
 
 app.use(cors());
@@ -16,9 +14,9 @@ app.use(bodyParser.json());
 // use JWT auth to secure the api
 app.use(jwt());
 
-app.use('/user', userRoutes);
+app.use('/user', userRoutes.routes);
 
-// global error handler
+// global error handler for routes
 app.use(errorHandler);
 
 

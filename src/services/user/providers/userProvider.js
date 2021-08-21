@@ -1,8 +1,6 @@
 const fs = require('fs');
 const request= require('request');
 const AWS = require("aws-sdk");
-const { resolve } = require('path');
-const { rejects } = require('assert');
 AWS.config.update({
     region: "us-east-1"
   });
@@ -99,7 +97,7 @@ const registerUserData=async (paramsData)=>{
       }
     const queryData=async (paramsData)=>{
         try {
-            return   (await  dynamodbClient.scan(paramsData).promise())?.Items || [];      
+            return   (await  dynamodbClient.scan(paramsData).promise()).Items || [];      
         } catch (error) {
           throw error;
         }
