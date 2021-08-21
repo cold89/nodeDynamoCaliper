@@ -5,6 +5,15 @@ const routes= express.Router({
 mergeParams:true
 });
 
+routes.get('/health-check',async(req,res)=>{
+    try {
+        console.log(`Testing health check-up`);
+        res.status(200).json({msg :`server up and runing`})
+    } catch (error) {
+        res.status(500).json(error)
+    }
+});
+
 routes.post('/register',async(req,res)=>{
     try {
         let result= await userController.registerUserData(req.body);
