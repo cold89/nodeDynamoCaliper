@@ -7,9 +7,11 @@ const userProvider = require('./providers/userProvider');
 
 const registerUserData = async (params) => {
     try {
+        console.log(`registerUserData : Start`,params);
         let app_id = uuidv4();
         let tokenDetail = await createJwtToken(app_id);
         await userProvider.registerUserData({ app_id: app_id, authToken: tokenDetail.token, ...params });
+        console.log(`registerUserData : End`,params);
         return { app_id: app_id, authToken: tokenDetail.token }
     } catch (error) {
         throw error

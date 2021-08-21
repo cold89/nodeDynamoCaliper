@@ -2,6 +2,8 @@ const fs = require('fs');
 const request= require('request');
 const AWS = require("aws-sdk");
 AWS.config.update({
+  accessKeyId:"AKIA42DG7IIQSGFHFQHF",
+  secretAccessKey:"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",
     region: "us-east-1"
   });
 
@@ -71,7 +73,7 @@ const registerUserData=async (paramsData)=>{
         let intervalId=setInterval(async() => {
           console.log(`setInterval-->Start`)
            let tableStatus= await checkTableExists(paramsData.TableName);
-          console.log(`${paramsData.TableName}tableStatus`,tableStatus);
+          console.log(`${paramsData.TableName} tableStatus`,tableStatus);
           if(tableStatus){
             clearInterval(intervalId)
             console.log(`setInterval-->Completed`);
@@ -88,7 +90,7 @@ const registerUserData=async (paramsData)=>{
     };
         console.log(`checkTableExists--> start`)
       let tableStatus= await dynamodb.describeTable(params).promise();
-      console.log(`checkTableExists--> Ebd`,tableStatus.Table.TableStatus)
+      console.log(`checkTableExists--> End`,tableStatus.Table.TableStatus)
       return (tableStatus.Table.TableStatus==`ACTIVE`)?true:false;
        
       } catch (error) {
