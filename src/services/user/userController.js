@@ -18,12 +18,12 @@ const registerUserData = async (params) => {
     }
 }
 
-const createDynamicSubUserData = async (params, authToken) => {
+const createDynamicAppTable = async (params, authToken) => {
     try {
 
-        console.log(`createDynamicSubUserData : Start => params ${JSON.stringify(params)}`);
+        console.log(`createDynamicAppTable : Start => params ${JSON.stringify(params)}`);
         let authenticated = await authenticate(authToken);//will automatic throw error
-        console.log(`createDynamicSubUserData : In Progreess / authenticated => Success`);
+        console.log(`createDynamicAppTable : In Progreess / authenticated => Success`);
 
         let app_id = authenticated.app_id;
         let dynamicPrimaryKey = uuidv4();
@@ -35,9 +35,9 @@ const createDynamicSubUserData = async (params, authToken) => {
 
         };
 
-        console.log(`createDynamicSubUserData : In Progreess / createDynamicHashKeyTable => Start`);
+        console.log(`createDynamicAppTable : In Progreess / createDynamicHashKeyTable => Start`);
         await userProvider.createDynamicHashKeyTable(paramsReq);//will create dynamic table
-        console.log(`createDynamicSubUserData : In Progreess / createDynamicHashKeyTable => Completed`);
+        console.log(`createDynamicAppTable : In Progreess / createDynamicHashKeyTable => Completed`);
 
         let itemObj = {};
         params.dynamicColumns.map((d) => {
@@ -48,9 +48,9 @@ const createDynamicSubUserData = async (params, authToken) => {
             TableName: params.dynamicTable,
         };
 
-        console.log(`createDynamicSubUserData : In Progreess / insertRowData : Table ${params.dynamicTable} => Start`);
+        console.log(`createDynamicAppTable : In Progreess / insertRowData : Table ${params.dynamicTable} => Start`);
         await userProvider.insertRowData(dynamicColumnsObj);// will create columns by inserting data
-        console.log(`createDynamicSubUserData : In Progreess / insertRowData : Table ${params.dynamicTable} => Completed `);
+        console.log(`createDynamicAppTable : In Progreess / insertRowData : Table ${params.dynamicTable} => Completed `);
 
         let appMappingKey = uuidv4();
         let appMappingObj = {
@@ -62,11 +62,54 @@ const createDynamicSubUserData = async (params, authToken) => {
             }
         }
 
-        console.log(`createDynamicSubUserData : In Progreess / insertRowData : Table ${appMappingObj.TableName} => Start`);
+        console.log(`createDynamicAppTable : In Progreess / insertRowData : Table ${appMappingObj.TableName} => Start`);
         await userProvider.insertRowData(appMappingObj);
-        console.log(`createDynamicSubUserData : In Progreess / insertRowData : Table ${appMappingObj.TableName} => Completed`);
+        console.log(`createDynamicAppTable : In Progreess / insertRowData : Table ${appMappingObj.TableName} => Completed`);
 
-        console.log(`createDynamicSubUserData : Completed`);
+        console.log(`createDynamicAppTable : Completed`);
+        return;
+    } catch (error) {
+        throw error
+    }
+}
+
+const deleteDynamicAppTable = async (params, authToken) => {
+    try {
+
+        console.log(`deleteDynamicAppTable : Start => params ${JSON.stringify(params)}`);
+        let authenticated = await authenticate(authToken);//will automatic throw error
+        console.log(`deleteDynamicAppTable : In Progreess / authenticated => Success`);
+
+        params = { ...authenticated, ...params };
+       
+        let checkAuthroizedUserData = await checkAuthroizedUser(params);
+        let responseDetail = `unauthrozed User`;
+        if (checkAuthroizedUserData.length) {
+            // if (params.data.s3File) {//will update the s3 bucket
+            //     await uploads3Bucket(params);
+            // }
+            let mappingObj=checkAuthroizedUserData.find((d) => d.table_name == params.dynamicTable)
+            let appMappingObj = {
+                TableName: `app_table_mapping`,
+                Key: {
+                    "mapping_id": mappingObj.mapping_id
+                }
+            }
+
+            console.log(`deleteDynamicAppTable : In Progreess / deleteRowData : Table ${appMappingObj.TableName} => Start`);
+        //    await userProvider.deleteRowData(appMappingObj);
+           console.log(`deleteDynamicAppTable : In Progreess / deleteRowData : Table ${appMappingObj.TableName} => Completd`);
+       
+           let deleteTableObj={
+            TableName:mappingObj.table_name
+           }
+           console.log(`deleteDynamicAppTable : In Progreess / deleteDynamicHashKeyTable : Table ${deleteTableObj.TableName} => Start`);
+           await userProvider.deleteDynamicHashKeyTable(deleteTableObj);
+           console.log(`deleteDynamicAppTable : In Progreess / deleteDynamicHashKeyTable : Table ${deleteTableObj.TableName} => Completd`);
+        }
+
+
+        console.log(`deleteDynamicAppTable : Completed`);
         return;
     } catch (error) {
         throw error
@@ -157,6 +200,34 @@ const updateDynamicSubUserData = async (params, authToken) => {
 
 }
 
+const deleteDynamicSubUserData = async (params, authToken) => {
+    try {
+
+        let authenticated = await authenticate(authToken);//will automatic throw error
+        params = { ...authenticated, ...params };
+        let dynamicPrimaryKey = params.uuid;
+       
+        let checkAuthroizedUserData = await checkAuthroizedUser(params);
+        let responseDetail = `unauthrozed User`;
+        if (checkAuthroizedUserData.length) {
+            // if (params.data.s3File) {//will update the s3 bucket
+            //     await uploads3Bucket(params);
+            // }
+            let dynamicObj = {
+                TableName: params.dynamicTable,
+                Key: {
+                    "uuid": dynamicPrimaryKey
+                }
+            }
+            responseDetail = await userProvider.deleteRowData(dynamicObj);
+        }
+        return responseDetail;
+    } catch (error) {
+        throw error
+    }
+
+}
+
 const uploads3Bucket = async (params) => {
     try {
         let respData = await userProvider.uploadS3Bucket({ params, bucketName: `nodedynamocaliper` });
@@ -181,7 +252,7 @@ const checkAuthroizedUser = async (params) => {
         let authData = await userProvider.queryData(paramsObj);
 
         if (!authData.length) {
-            throw { message: `User do not have rights to any operation` }
+            throw { message: `User do not have rights to do any operation. Please Register your APP first` }
         }
         if (params.dynamicTable && !authData.find((d) => d.table_name == params.dynamicTable)) {
             throw { message: `User do not have rights to any operation on table ${params.dynamicTable}` }
@@ -229,9 +300,11 @@ const authenticate = async (token) => {
 
 module.exports = {
     registerUserData,
-    createDynamicSubUserData,
+    createDynamicAppTable,
+    deleteDynamicAppTable,
     insertDynamicSubUserData,
     updateDynamicSubUserData,
+    deleteDynamicSubUserData,
     checkAuthroizedUser,
     createJwtToken,
     authenticate

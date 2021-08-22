@@ -1,10 +1,11 @@
 const fs = require('fs');
 const request = require('request');
 const AWS = require("aws-sdk");
-AWS.config.update({
-  region: "us-east-1"
-});
 
+AWS.config.update({
+    region: "us-east-1"
+  });
+ 
 const dynamodbClient = new AWS.DynamoDB.DocumentClient();
 
 const dynamodb = new AWS.DynamoDB();
@@ -62,34 +63,61 @@ const createTableData = async (paramsData) => {
     await dynamodb.createTable(params).promise();
     console.log(`createTableData : Inprogress / createTable => Completed`);
 
-    console.log(`createTableData : Inprogress / checkTableCreatedStatus => Start`);
-    let dataMain = await checkTableCreatedStatus(paramsData);
-    console.log(`createTableData : Completed / checkTableCreatedStatus => Completed`);
+    console.log(`createTableData : Inprogress / checkTableProgressStatus => Start`);
+    let dataMain = await checkTableProgressStatus(paramsData);
+    console.log(`createTableData : Completed / checkTableProgressStatus => Completed`);
 
     return dataMain;
   } catch (error) {
     throw error
   }
 }
+const deleteDynamicHashKeyTable = async (paramsData) => {
+  try {
+    let params = {
+      TableName: paramsData.TableName,
+    };
 
-const checkTableCreatedStatus = (paramsData) => {
+    return await deleteTableData(params);
+
+  } catch (error) {
+    throw error
+  }
+}
+
+const deleteTableData = async (paramsData) => {
+  try {
+
+    console.log(`deleteTableData : Start`);
+
+    console.log(`deleteTableData : Inprogress / deleteTable => Start params ${paramsData}`);
+    await dynamodb.deleteTable(paramsData).promise();
+    console.log(`deleteTableData : Inprogress / deleteTable => Completed`);
+
+    return `${paramsData.TableName} Deleted Succsfully `;
+  } catch (error) {
+    throw error
+  }
+}
+
+const checkTableProgressStatus = (paramsData) => {
   return new Promise((resolve) => {
 
-    console.log(`checkTableCreatedStatus : Start`);
+    console.log(`checkTableProgressStatus : Start`);
 
     let intervalId = setInterval(async () => {
 
-      console.log(`checkTableCreatedStatus : In Progress / checkTableExists : Start`);
+      console.log(`checkTableProgressStatus : In Progress / checkTableExists : Start`);
 
       let tableStatus = await checkTableExists(paramsData.TableName);
-      console.log(`checkTableCreatedStatus : In Progress / checkTableExists : Completed => ${paramsData.TableName} tableStatus `, tableStatus);
+      console.log(`checkTableProgressStatus : In Progress / checkTableExists : Completed => ${paramsData.TableName} tableStatus `, tableStatus);
 
       if (tableStatus) {
         clearInterval(intervalId);
-        console.log(`checkTableCreatedStatus : Completed / setInterval : Completed`);
+        console.log(`checkTableProgressStatus : Completed / setInterval : Completed`);
         resolve(true); return;
       }
-      console.log(`checkTableCreatedStatus : In Progress / setInterval : In Progress`);
+      console.log(`checkTableProgressStatus : In Progress / setInterval : In Progress`);
     }, 3000)
   })
 }
@@ -139,6 +167,19 @@ const updateRowData = async ({ TableName, Key, UpdateExpression, ExpressionAttri
       ReturnValues: "UPDATED_NEW"
     };
     return (await dynamodbClient.update(params).promise()) || [];
+
+  } catch (error) {
+    throw error
+  }
+}
+
+const deleteRowData = async ({ TableName, Key }) => {
+  try {
+    let params = {
+      TableName: TableName,
+      Key: Key
+    };
+    return (await dynamodbClient.delete(params).promise()) || [];
 
   } catch (error) {
     throw error
@@ -236,23 +277,11 @@ const readStreamData = (fileName) => {
 module.exports = {
   registerUserData,
   createDynamicHashKeyTable,
-  createTableData,
+  deleteDynamicHashKeyTable,
   insertRowData,
   queryData,
   updateRowData,
+  deleteRowData,
   checkCreates3Bucket,
   uploadS3Bucket
 }
-
-    //Below Code for future references 
-     // let dataMain=require('util').promisify(setInterval(async() => {
-            //   console.log(`setInterval-->Start`)
-            //   let tableStatus= await checkTableExists(paramsData.TableName);
-            //   console.log(tableStatus,"_+__+_")
-            //   if(tableStatus){
-            //     console.log(`setInterval-->Completed`)
-            //     // clearInterval(intervalID);
-            //     return `Success`
-            //   }
-            //   console.log(`setInterval-->END`)
-            // }, 1000));
