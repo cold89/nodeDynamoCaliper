@@ -7,11 +7,11 @@ const userProvider = require('./providers/userProvider');
 
 const registerUserData = async (params) => {
     try {
-        console.log(`registerUserData : Start`,params);
+        console.log(`registerUserData : Start`, params);
         let app_id = uuidv4();
         let tokenDetail = await createJwtToken(app_id);
         await userProvider.registerUserData({ app_id: app_id, authToken: tokenDetail.token, ...params });
-        console.log(`registerUserData : End`,params);
+        console.log(`registerUserData : End`, params);
         return { app_id: app_id, authToken: tokenDetail.token }
     } catch (error) {
         throw error
@@ -20,11 +20,11 @@ const registerUserData = async (params) => {
 
 const createDynamicSubUserData = async (params, authToken) => {
     try {
-        
+
         console.log(`createDynamicSubUserData : Start => params ${JSON.stringify(params)}`);
         let authenticated = await authenticate(authToken);//will automatic throw error
         console.log(`createDynamicSubUserData : In Progreess / authenticated => Success`);
-        
+
         let app_id = authenticated.app_id;
         let dynamicPrimaryKey = uuidv4();
         let paramsReq = {
@@ -38,7 +38,7 @@ const createDynamicSubUserData = async (params, authToken) => {
         console.log(`createDynamicSubUserData : In Progreess / createDynamicHashKeyTable => Start`);
         await userProvider.createDynamicHashKeyTable(paramsReq);//will create dynamic table
         console.log(`createDynamicSubUserData : In Progreess / createDynamicHashKeyTable => Completed`);
-        
+
         let itemObj = {};
         params.dynamicColumns.map((d) => {
             itemObj[d] = ``
@@ -95,7 +95,7 @@ const insertDynamicSubUserData = async (params, authToken) => {
 
         if (checkAuthroizedUserData.length) {
             if (params.data.s3File) {//will update the s3 bucket
-                await uploads3Bucket({uuid:dynamicPrimaryKey,...params});
+                await uploads3Bucket({ uuid: dynamicPrimaryKey, ...params });
             }
             let insertedData = await userProvider.insertRowData(dynamicColumnsObj);
             responseDetail = { processData: dynamicColumnsObj, ...insertedData };
@@ -183,7 +183,7 @@ const checkAuthroizedUser = async (params) => {
         if (!authData.length) {
             throw { message: `User do not have rights to any operation` }
         }
-        if (params.dynamicTable && !authData.find((d)=> d.table_name==params.dynamicTable)) {
+        if (params.dynamicTable && !authData.find((d) => d.table_name == params.dynamicTable)) {
             throw { message: `User do not have rights to any operation on table ${params.dynamicTable}` }
         }
         return authData;
