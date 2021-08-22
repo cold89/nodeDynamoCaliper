@@ -56,28 +56,40 @@ const registerUserData=async (paramsData)=>{
               WriteCapacityUnits: 10
         }
       }
-            console.log(`createTableData- >> start`);
+            console.log(`createTableData : Start`);
+           
+            console.log(`createTableData : Inprogress / createTable => Start params ${params}`);
             await dynamodb.createTable(params).promise();
-            console.log(`createTableData- >> END`);
-            let dataMain = await sleep(paramsData);
+            console.log(`createTableData : Inprogress / createTable => Completed`);
+            
+            console.log(`createTableData : Inprogress / checkTableCreatedStatus => Start`);
+            let dataMain = await checkTableCreatedStatus(paramsData);
+            console.log(`createTableData : Completed / checkTableCreatedStatus => Completed`);
+
        return dataMain;
       } catch (error) {
           throw error
       }
     }
 
-    const sleep= (paramsData)=> {
+    const checkTableCreatedStatus= (paramsData)=> {
       return new Promise((resolve) => {
+
+        console.log(`checkTableCreatedStatus : Start`);
+
         let intervalId=setInterval(async() => {
-          console.log(`setInterval-->Start`)
-           let tableStatus= await checkTableExists(paramsData.TableName);
-          console.log(`${paramsData.TableName} tableStatus`,tableStatus);
+          
+          console.log(`checkTableCreatedStatus : In Progress / checkTableExists : Start`);
+          
+          let tableStatus= await checkTableExists(paramsData.TableName);
+          console.log(`checkTableCreatedStatus : In Progress / checkTableExists : Completed => ${paramsData.TableName} tableStatus `,tableStatus);
+
           if(tableStatus){
-            clearInterval(intervalId)
-            console.log(`setInterval-->Completed`);
-            resolve(true);
+            clearInterval(intervalId);
+            console.log(`checkTableCreatedStatus : Completed / setInterval : Completed`);
+            resolve(true); return;
           }
-          console.log(`setInterval-->END`)
+          console.log(`checkTableCreatedStatus : In Progress / setInterval : In Progress`);
         }, 3000)
       })
     }
@@ -86,9 +98,7 @@ const registerUserData=async (paramsData)=>{
        let params = {
         TableName: tableName /* required */
     };
-        console.log(`checkTableExists--> start`)
       let tableStatus= await dynamodb.describeTable(params).promise();
-      console.log(`checkTableExists--> End`,tableStatus.Table.TableStatus)
       return (tableStatus.Table.TableStatus==`ACTIVE`)?true:false;
        
       } catch (error) {

@@ -20,9 +20,12 @@ const registerUserData = async (params) => {
 
 const createDynamicSubUserData = async (params, authToken) => {
     try {
+        
+        console.log(`createDynamicSubUserData : Start => params ${JSON.stringify(params)}`);
         let authenticated = await authenticate(authToken);//will automatic throw error
+        console.log(`createDynamicSubUserData : In Progreess / authenticated => Success`);
+        
         let app_id = authenticated.app_id;
-
         let dynamicPrimaryKey = uuidv4();
         let paramsReq = {
             tableName: params.dynamicTable,
@@ -31,7 +34,11 @@ const createDynamicSubUserData = async (params, authToken) => {
             AttributeType: "S"
 
         };
+
+        console.log(`createDynamicSubUserData : In Progreess / createDynamicHashKeyTable => Start`);
         await userProvider.createDynamicHashKeyTable(paramsReq);//will create dynamic table
+        console.log(`createDynamicSubUserData : In Progreess / createDynamicHashKeyTable => Completed`);
+        
         let itemObj = {};
         params.dynamicColumns.map((d) => {
             itemObj[d] = ``
@@ -40,7 +47,10 @@ const createDynamicSubUserData = async (params, authToken) => {
             Item: { ...itemObj, uuid: dynamicPrimaryKey },
             TableName: params.dynamicTable,
         };
+
+        console.log(`createDynamicSubUserData : In Progreess / insertRowData : Table ${params.dynamicTable} => Start`);
         await userProvider.insertRowData(dynamicColumnsObj);// will create columns by inserting data
+        console.log(`createDynamicSubUserData : In Progreess / insertRowData : Table ${params.dynamicTable} => Completed `);
 
         let appMappingKey = uuidv4();
         let appMappingObj = {
@@ -48,13 +58,16 @@ const createDynamicSubUserData = async (params, authToken) => {
             Item: {
                 mapping_id: appMappingKey,
                 app_id: app_id,
-                table_name: params.dynamicTable,
-                dynamic_uuid: dynamicPrimaryKey
+                table_name: params.dynamicTable
             }
         }
-        await userProvider.insertRowData(appMappingObj);
-        return;
 
+        console.log(`createDynamicSubUserData : In Progreess / insertRowData : Table ${appMappingObj.TableName} => Start`);
+        await userProvider.insertRowData(appMappingObj);
+        console.log(`createDynamicSubUserData : In Progreess / insertRowData : Table ${appMappingObj.TableName} => Completed`);
+
+        console.log(`createDynamicSubUserData : Completed`);
+        return;
     } catch (error) {
         throw error
     }
