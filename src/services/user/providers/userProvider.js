@@ -2,8 +2,6 @@ const fs = require('fs');
 const request= require('request');
 const AWS = require("aws-sdk");
 AWS.config.update({
-  accessKeyId:"AKIA42DG7IIQSGFHFQHF",
-  secretAccessKey:"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",
     region: "us-east-1"
   });
 
