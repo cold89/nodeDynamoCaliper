@@ -26,11 +26,14 @@
 		{
 			"name": "Register user",
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\":\"ankit2.com\",\n    \"desc\":\"someopass\"\n\n}",
+					"raw": "{\n    \"app_desc\":\"shoryaTest2\",\n    \"app_name\":\"shoryaApp2\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -52,13 +55,30 @@
 			"response": []
 		},
 		{
-			"name": "CreateDynamnicUserTable",
+			"name": "CreateDynamnicAppTable",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfaWQiOiI1MzI3ZmJiOS03MWQ4LTQ0YmItYTdjOC04MTEzMjZjYzk0ZjYiLCJpYXQiOjE2Mjk2NTk5Njl9.6hsf5rNesdb40RWek7g152t7Pf2rM5NamNJBXJ5DjZs",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjkzMzk3NDR9.A-WdnekYZJDme-bp4UslC8vkw5os3XWzFcUdi0gw8fU",
+						"type": "text",
+						"disabled": true
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"app_id\": \"9777dc5e-051f-4251-8d46-d5e398824287\",\n    \"dynamicTable\": \"shorya1\",\n    \"dynamicColumns\":[\"fname\",\"lname\",\"address\"]\n}",
+					"raw": "{\n    \"dynamicTable\": \"App1Table2\",\n    \"dynamicColumns\":[\"fname\",\"lname\",\"address\",\"pincode\"]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -80,13 +100,68 @@
 			"response": []
 		},
 		{
+			"name": "DeleteDynamnicAPPTable",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfaWQiOiI1MzI3ZmJiOS03MWQ4LTQ0YmItYTdjOC04MTEzMjZjYzk0ZjYiLCJpYXQiOjE2Mjk2NTk5Njl9.6hsf5rNesdb40RWek7g152t7Pf2rM5NamNJBXJ5DjZs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjkzMzk3NDR9.A-WdnekYZJDme-bp4UslC8vkw5os3XWzFcUdi0gw8fU",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"dynamicTable\": \"App1Table2\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/user/delete-dynamnic-table",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"user",
+						"delete-dynamnic-table"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "InsertDynamnicTable",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfaWQiOiIyZWIxYTYyZS04NTJjLTQ5N2MtYjRmOS02ZjdkZDBjYTFiYmIiLCJpYXQiOjE2Mjk1Njc2MDF9.OdejnjW0KOIXT6aVwiab7xvlc4QyYIwcCBX6pWT4Te4",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"dynamicTable\": \"shorya1\",\n    \"app_id\": \"9777dc5e-051f-4251-8d46-d5e398824287\",\n    \"data\": {\n        \"fname\": \"shorya\",\n        \"lname\": \"saxenba\",\n        \"tt\":\"rrr333\",\n        \"s3File\":\"https://images.all-free-download.com/images/graphicthumb/naturex27s_canvas_513167.jpg\"\n    }\n}",
+					"raw": "{\n    \"dynamicTable\": \"shoryaTable1\",\n    \"data\": {\n        \"fname\": \"shorya123\",\n        \"lname\": \"saxenba\",\n        \"tt\":\"rrr333www\",\n        \"s3File\":\"https://images.all-free-download.com/images/graphicthumb/naturex27s_canvas_513167.jpg\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -110,11 +185,21 @@
 		{
 			"name": "updateDynamnicTable",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfaWQiOiJlMzA1Y2I3NS1mMzQ0LTQxZjEtYWMwMy1kMGIzNDQ1MGFmNmEiLCJpYXQiOjE2Mjk0MDkwNDR9.Yfz765mmiPsfaRzRJzc_Qaca_M48ilGwjtLztnm_pr4",
+							"type": "string"
+						}
+					]
+				},
 				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"dynamicTable\": \"shorya1\",\n    \"app_id\": \"9777dc5e-051f-4251-8d46-d5e398824287\",\n    \"uuid\":\"6a056722-435a-43a1-9bec-a884912ac801\",\n    \"data\": {\n        \"fname\": \"shorya\",\n        \"lname\": \"saxenba\",\n        \"tt\":\"rrr333\",\n        \"s3File\":\"https://images.all-free-download.com/images/graphicthumb/naturex27s_canvas_513167.jpg\"\n    }\n}",
+					"raw": "{\n    \"dynamicTable\": \"shoryaTable4\",\n    \"uuid\":\"54e4aa54-007e-4646-9aa7-56f224235fdf\",\n    \"data\": {\n        \"fname\": \"yu44\",\n        \"lname\": \"saxena\",\n        \"tt\":\"qwe\",\n        \"someData\":\"sds\",\n        \"s3File\":\"https://images.all-free-download.com/images/graphicthumb/naturex27s_canvas_513167.jpg\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -134,6 +219,74 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "DeleteDataDynamnicTable",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfaWQiOiI1MzI3ZmJiOS03MWQ4LTQ0YmItYTdjOC04MTEzMjZjYzk0ZjYiLCJpYXQiOjE2Mjk2NTk5Njl9.6hsf5rNesdb40RWek7g152t7Pf2rM5NamNJBXJ5DjZs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"dynamicTable\": \"App1Table2\",\n    \"uuid\":\"f05f45cc-32d5-428d-9139-60c2cd79ab86\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/user/insert-update-dynamnic-table",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"user",
+						"insert-update-dynamnic-table"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "NodeDynamoDevUrl",
+			"value": "https://miniw719ge.execute-api.us-east-1.amazonaws.com/dev"
+		},
+		{
+			"key": "NodeDynamoLocalUrl",
+			"value": "localhost:8000"
 		}
 	]
 }
