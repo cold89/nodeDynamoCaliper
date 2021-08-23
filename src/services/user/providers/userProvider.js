@@ -206,14 +206,14 @@ const uploadS3Bucket = async ({ params, bucketName }) => {
     let readStream = await readStreamData(tempFileName);
     // Setting up S3 upload parameters
     let s3PathArray = params.data.s3File.split('/');
-    let s3folderPath = `${params.app_id}/${params.uuid}/${s3PathArray[s3PathArray.length - 1]}`
+    // let s3folderPath = `${params.app_id}/${params.uuid}/${s3PathArray[s3PathArray.length - 1]}`;
+    let s3folderPath = `${params.app_id}/${params.dynamicTable}/${s3PathArray[s3PathArray.length - 1]}`
     const paramsData = {
       Bucket: bucketName,
       Key: s3folderPath, // File name you want to save as in S3
       Body: readStream,
       ACL: `public-read-write`
     };
-    var options = { partSize: 10 * 1024 * 1024, queueSize: 1 };
     let respData = await new Promise((resolve, reject) => {
       s3.upload({
         ...paramsData

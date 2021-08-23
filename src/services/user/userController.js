@@ -97,7 +97,7 @@ const deleteDynamicAppTable = async (params, authToken) => {
             }
 
             console.log(`deleteDynamicAppTable : In Progreess / deleteRowData : Table ${appMappingObj.TableName} => Start`);
-        //    await userProvider.deleteRowData(appMappingObj);
+            await userProvider.deleteRowData(appMappingObj);
            console.log(`deleteDynamicAppTable : In Progreess / deleteRowData : Table ${appMappingObj.TableName} => Completd`);
        
            let deleteTableObj={

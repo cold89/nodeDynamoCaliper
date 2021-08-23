@@ -33,7 +33,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"app_desc\":\"shoryaTest2\",\n    \"app_name\":\"shoryaApp2\"\n}",
+					"raw": "{\n    \"app_desc\":\"shoryaTest6\",\n    \"app_name\":\"shoryaApp46\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -62,7 +62,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfaWQiOiI1MzI3ZmJiOS03MWQ4LTQ0YmItYTdjOC04MTEzMjZjYzk0ZjYiLCJpYXQiOjE2Mjk2NTk5Njl9.6hsf5rNesdb40RWek7g152t7Pf2rM5NamNJBXJ5DjZs",
+							"value": "{{authToken}}",
 							"type": "string"
 						}
 					]
@@ -78,7 +78,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"dynamicTable\": \"App1Table2\",\n    \"dynamicColumns\":[\"fname\",\"lname\",\"address\",\"pincode\"]\n}",
+					"raw": "{\n    \"dynamicTable\": \"App1Table567\",\n    \"dynamicColumns\":[\"fname\",\"lname\",\"address\",\"pincode\"]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -100,51 +100,6 @@
 			"response": []
 		},
 		{
-			"name": "DeleteDynamnicAPPTable",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfaWQiOiI1MzI3ZmJiOS03MWQ4LTQ0YmItYTdjOC04MTEzMjZjYzk0ZjYiLCJpYXQiOjE2Mjk2NTk5Njl9.6hsf5rNesdb40RWek7g152t7Pf2rM5NamNJBXJ5DjZs",
-							"type": "string"
-						}
-					]
-				},
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjkzMzk3NDR9.A-WdnekYZJDme-bp4UslC8vkw5os3XWzFcUdi0gw8fU",
-						"type": "text",
-						"disabled": true
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"dynamicTable\": \"App1Table2\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:8000/user/delete-dynamnic-table",
-					"host": [
-						"localhost"
-					],
-					"port": "8000",
-					"path": [
-						"user",
-						"delete-dynamnic-table"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "InsertDynamnicTable",
 			"request": {
 				"auth": {
@@ -152,7 +107,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfaWQiOiIyZWIxYTYyZS04NTJjLTQ5N2MtYjRmOS02ZjdkZDBjYTFiYmIiLCJpYXQiOjE2Mjk1Njc2MDF9.OdejnjW0KOIXT6aVwiab7xvlc4QyYIwcCBX6pWT4Te4",
+							"value": "{{authToken}}",
 							"type": "string"
 						}
 					]
@@ -161,7 +116,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"dynamicTable\": \"shoryaTable1\",\n    \"data\": {\n        \"fname\": \"shorya123\",\n        \"lname\": \"saxenba\",\n        \"tt\":\"rrr333www\",\n        \"s3File\":\"https://images.all-free-download.com/images/graphicthumb/naturex27s_canvas_513167.jpg\"\n    }\n}",
+					"raw": "{\n    \"dynamicTable\": \"App1Table2\",\n    \"data\": {\n        \"fname\": \"shorya12qqq1123\",\n        \"lname\": \"saxen112222ba11\",\n        \"tt\":\"rrr333www\",\n        \"s3File\":\"https://images.all-free-download.com/images/graphicthumb/naturex27s_canvas_513167.jpg\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -190,7 +145,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfaWQiOiJlMzA1Y2I3NS1mMzQ0LTQxZjEtYWMwMy1kMGIzNDQ1MGFmNmEiLCJpYXQiOjE2Mjk0MDkwNDR9.Yfz765mmiPsfaRzRJzc_Qaca_M48ilGwjtLztnm_pr4",
+							"value": "{{authToken}}",
 							"type": "string"
 						}
 					]
@@ -221,6 +176,51 @@
 			"response": []
 		},
 		{
+			"name": "DeleteDynamnicAPPTable",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjkzMzk3NDR9.A-WdnekYZJDme-bp4UslC8vkw5os3XWzFcUdi0gw8fU",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"dynamicTable\": \"App1Table567\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/user/delete-dynamnic-table",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"user",
+						"delete-dynamnic-table"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "DeleteDataDynamnicTable",
 			"request": {
 				"auth": {
@@ -228,7 +228,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfaWQiOiI1MzI3ZmJiOS03MWQ4LTQ0YmItYTdjOC04MTEzMjZjYzk0ZjYiLCJpYXQiOjE2Mjk2NTk5Njl9.6hsf5rNesdb40RWek7g152t7Pf2rM5NamNJBXJ5DjZs",
+							"value": "{{authToken}}",
 							"type": "string"
 						}
 					]
@@ -237,7 +237,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"dynamicTable\": \"App1Table2\",\n    \"uuid\":\"f05f45cc-32d5-428d-9139-60c2cd79ab86\"\n}",
+					"raw": "{\n    \"dynamicTable\": \"App1Table2\",\n    \"uuid\":\"ed50e5fb-ea83-4163-b32e-26b89f7781ec\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -287,6 +287,10 @@
 		{
 			"key": "NodeDynamoLocalUrl",
 			"value": "localhost:8000"
+		},
+		{
+			"key": "auth-token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfaWQiOiJjNWQxZTAwMS1mMDU2LTRkZDktYjJhOS0zYTJlMTMwOTQzNWMiLCJpYXQiOjE2Mjk3MjQ3ODZ9.3D5lM0RGzOZs1Q4JDv724mTSFn8TPwF6lquUUSVl5Mk"
 		}
 	]
 }
