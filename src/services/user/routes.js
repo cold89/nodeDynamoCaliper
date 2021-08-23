@@ -23,6 +23,16 @@ routes.post('/register',async(req,res)=>{
     }
 });
 
+routes.post('/refresh-token',async(req,res)=>{
+    try {
+        let authToken= fetchToken(req.headers);
+        let result= await userController.refreshRegisterUserToken(req.body,authToken);
+        res.status(200).json({msg :`Refresh Token Generated Succfully`,response:result})
+    } catch (error) {
+        res.status(500).json(error)
+    }
+});
+
 
 routes.post('/create-dynamnic-table',async(req,res)=>{
     try {

@@ -18,6 +18,24 @@ const registerUserData = async (params) => {
     }
 }
 
+const refreshRegisterUserToken = async (params,authToken) => {
+    try {
+
+        console.log(`refreshRegisterUserToken : Start => params ${JSON.stringify(params)}`);
+        let authenticated = await authenticate(authToken);//will automatic throw error
+        console.log(`refreshRegisterUserToken : In Progreess / authenticated => Success`);
+
+        let app_id = authenticated.app_id;
+        let tokenDetail = await createJwtToken(app_id);
+        
+        console.log(`refreshRegisterUserToken : End`);
+
+        return { app_id: app_id, authToken: tokenDetail.token }
+    } catch (error) {
+        throw error
+    }
+}
+
 const createDynamicAppTable = async (params, authToken) => {
     try {
 
@@ -115,8 +133,6 @@ const deleteDynamicAppTable = async (params, authToken) => {
         throw error
     }
 }
-
-
 
 const insertDynamicSubUserData = async (params, authToken) => {
     try {
@@ -297,9 +313,9 @@ const authenticate = async (token) => {
 }
 
 
-
 module.exports = {
     registerUserData,
+    refreshRegisterUserToken,
     createDynamicAppTable,
     deleteDynamicAppTable,
     insertDynamicSubUserData,
