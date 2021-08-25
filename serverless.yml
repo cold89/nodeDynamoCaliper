@@ -18,7 +18,7 @@ service: nodedynamocalipers
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
-frameworkVersion: '2'
+frameworkVersion: "2"
 
 provider:
   name: aws
@@ -110,13 +110,10 @@ functions:
 #      variable2: value2
 
 # you can add CloudFormation resource templates here
-#resources:
-#  Resources:
-#    NewResource:
-#      Type: AWS::S3::Bucket
-#      Properties:
-#        BucketName: my-new-bucket
-#  Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"
+# resources:
+#   Resources:
+#     MyFunctionIamRoleLambdaExecution:
+#       Type: "AWS::IAM::Role"
+#       AssumeRolePolicyDocument: {"Version":"2021-10-17"}
+#       Properties:
+#         RoleName: {'Fn::Sub': 'arn:aws:iam::880684253729:role/lambda_execution_role'}
