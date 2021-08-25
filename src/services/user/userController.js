@@ -305,7 +305,7 @@ const checkAuthroizedUser = async (params) => {
 
     if (!authData.length) {
       throw {
-        message: `User do not have rights to do any operation. Please Register your APP first`,
+        message: `User do not have rights to do any operation on table ${params.dynamicTable}`,
       };
     }
     if (

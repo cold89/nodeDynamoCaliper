@@ -127,7 +127,7 @@ const checkTableProgressStatus = (paramsData) => {
         resolve(true);
         return;
       }
-    }, 3000);
+    }, 1000);
   });
 };
 const checkTableExists = async (tableName) => {
