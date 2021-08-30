@@ -1,5 +1,6 @@
 const userController = require("./userController");
 const express = require("express");
+const multer =require('multer');
 
 const routes = express.Router({
   mergeParams: true,
@@ -115,6 +116,37 @@ routes.post("/authenticate", async (req, res) => {
     res.status(500).json(error);
   }
 });
+
+routes.post("/insert-update-dynamnic-table-s3Upload", 
+        multer({ dest: '/tmp/', limits: { fieldSize: 8 * 1024 * 1024 } })
+        .single('s3FileName'),async (req, res) => {
+  try {
+    let authToken = fetchToken(req.headers);
+    let result = await userController.s3MultiPartUpload(
+      req,
+      authToken
+    );
+    res.status(200).json({ msg: `s3 upload `, response: result });
+  } catch (error) {
+    res.status(401).json(error);
+  }
+});
+
+routes.put("/insert-update-dynamnic-table-s3Upload", 
+        multer({ dest: '/tmp/', limits: { fieldSize: 8 * 1024 * 1024 } })
+        .single('s3FileName'),async (req, res) => {
+  try {
+    let authToken = fetchToken(req.headers);
+    let result = await userController.updates3MultiPartUpload(
+      req,
+      authToken
+    );
+    res.status(200).json({ msg: `s3 upload `, response: result });
+  } catch (error) {
+    res.status(401).json(error);
+  }
+});
+
 
 function fetchToken(paramsObj) {
   return paramsObj.authorization.split(" ")[1];

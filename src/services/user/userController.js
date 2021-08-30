@@ -166,7 +166,7 @@ const deleteDynamicAppTable = async (params, authToken) => {
   }
 };
 
-const insertDynamicSubUserData = async (params, authToken) => {
+const insertDynamicSubUserData = async (params, authToken,mutliPartObj={}) => {
   try {
     let authenticated = await authenticate(authToken); //will automatic throw error
     params.app_id = authenticated.app_id;
@@ -185,9 +185,9 @@ const insertDynamicSubUserData = async (params, authToken) => {
     let responseDetail = `unauthrozed User`;
 
     if (checkAuthroizedUserData.length) {
-      if (params.data.s3File) {
+      if (params.data.s3File || mutliPartObj.isMutliPart) {
         //will update the s3 bucket
-        await uploads3Bucket({ uuid: dynamicPrimaryKey, ...params });
+        await uploads3Bucket({ uuid: dynamicPrimaryKey, ...params ,mutliPartObj});
       }
       let insertedData = await userProvider.insertRowData(dynamicColumnsObj);
       responseDetail = { processData: dynamicColumnsObj, ...insertedData };
@@ -198,7 +198,46 @@ const insertDynamicSubUserData = async (params, authToken) => {
   }
 };
 
-const updateDynamicSubUserData = async (params, authToken) => {
+const s3MultiPartUpload =async(req,authToken)=>{
+  try {
+    let paramsReqFileObj={
+      isMutliPart:true,
+      reqFileObj:req.file
+    };
+    let dynamicTable=req.body.dynamicTable;
+    delete req.body["dynamicTable"];
+    let paramsBody={
+      dynamicTable:dynamicTable,
+      data:req.body
+    }
+ await insertDynamicSubUserData(paramsBody,authToken,paramsReqFileObj);
+  } catch (error) {
+    throw error
+  }
+ }
+
+
+const updates3MultiPartUpload =async(req,authToken)=>{
+  try {
+    let paramsReqFileObj={
+      isMutliPart:true,
+      reqFileObj:req.file
+    };
+    let dynamicTable=req.body.dynamicTable;
+    let uuid= req.body.uuid;
+    delete req.body["dynamicTable"];
+    delete req.body["uuid"];
+    let paramsBody={
+      dynamicTable:dynamicTable,
+      uuid:uuid,
+      data:req.body
+    }
+ await updateDynamicSubUserData(paramsBody,authToken,paramsReqFileObj);
+  } catch (error) {
+    throw error
+  }
+ }
+const updateDynamicSubUserData = async (params, authToken,mutliPartObj={}) => {
   try {
     let authenticated = await authenticate(authToken); //will automatic throw error
     params = { ...authenticated, ...params };
@@ -215,9 +254,9 @@ const updateDynamicSubUserData = async (params, authToken) => {
     let checkAuthroizedUserData = await checkAuthroizedUser(params);
     let responseDetail = `unauthrozed User`;
     if (checkAuthroizedUserData.length) {
-      if (params.data.s3File) {
+      if (params.data.s3File || mutliPartObj.isMutliPart) {
         //will update the s3 bucket
-        await uploads3Bucket(params);
+        await uploads3Bucket({...params ,mutliPartObj});
       }
       let UpdateExpression = `set `;
       let dataMain = Object.keys(params.data);
@@ -281,7 +320,7 @@ const uploads3Bucket = async (params) => {
   try {
     let respData = await userProvider.uploadS3Bucket({
       params,
-      bucketName: `nodedynamocaliper`,
+      bucketName: `nodedynamocaliper`
     });
     return respData;
   } catch (error) {
@@ -365,4 +404,6 @@ module.exports = {
   checkAuthroizedUser,
   createJwtToken,
   authenticate,
+  s3MultiPartUpload,
+  updates3MultiPartUpload
 };

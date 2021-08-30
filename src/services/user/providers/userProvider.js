@@ -204,25 +204,36 @@ const checkCreates3Bucket = async (bucketName) => {
   }
 };
 
-const uploadS3Bucket = async ({ params, bucketName }) => {
+const uploadS3Bucket = async ({ params,bucketName }) => {
   try {
+    let tempFileName,readStream = ``,s3folderPath=``,orignalFileName=`Sample`;
+    let s3PathArray=[];
+    
+    if(params.data.s3File){
     // Create the file and get Data from API and update the file with that API data
-    let tempFileName = `/tmp/file.jpg`;
+    
+    tempFileName = `/tmp/file.jpg`;
     console.log(`uploadS3Bucket: Wrtie Stream Strarted`);
     await mainFunctionPromises(params, tempFileName);
     console.log(`uploadS3Bucket: Wrtie Stream Completed`);
     // Read content from the file
+    s3PathArray = params.data.s3File.split("/");
+    orignalFileName=s3PathArray[s3PathArray.length - 1];
+    }
+
+    if(params.mutliPartObj.isMutliPart){
+      tempFileName=params.mutliPartObj.reqFileObj.path;
+      orignalFileName=params.mutliPartObj.reqFileObj.originalname
+    }
+
+    s3folderPath = `${params.app_id}/${params.dynamicTable}/${orignalFileName}`;
 
     console.log(`uploadS3Bucket: readStreamData Stream started`);
-    let readStream = await readStreamData(tempFileName);
+    readStream = await readStreamData(tempFileName);
     console.log(`uploadS3Bucket: readStreamData Completed`);
     // Setting up S3 upload parameters
 
-    let s3PathArray = params.data.s3File.split("/");
-    // let s3folderPath = `${params.app_id}/${params.uuid}/${s3PathArray[s3PathArray.length - 1]}`;
-    let s3folderPath = `${params.app_id}/${params.dynamicTable}/${
-      s3PathArray[s3PathArray.length - 1]
-    }`;
+   
     const paramsData = {
       Bucket: bucketName,
       Key: s3folderPath, // File name you want to save as in S3
@@ -292,6 +303,41 @@ const readStreamData = (fileName) => {
   });
 };
 
+const multipPartUploadS3Bucket = async (req) => {
+  try {
+    // Create the file and get Data from API and update the file with that API data
+    console.log(`multipPartUploadS3Bucket : Start`)
+
+    // Read content from the file
+
+    console.log(`uploadS3Bucket: readStreamData Stream started`);
+    let readStream = await readStreamData(req.file.path);
+    console.log(`uploadS3Bucket: readStreamData Completed`);
+    // Setting up S3 upload parameters
+
+    const paramsData = {
+      Bucket: `nodedynamocaliper`,
+      Key: `userAvatar/${req.file.originalname}`, // File name you want to save as in S3
+      Body: readStream,
+      ACL: `public-read-write`,
+    };
+
+    console.log(`uploadS3Bucket: started`);
+    let respData = await new Promise((resolve, reject) => {
+      s3.upload(
+        {
+          ...paramsData,
+        },
+        (err, data) => (err == null ? resolve(data) : reject(err))
+      );
+    });
+    console.log(`uploadS3Bucket: Completed`);
+    return  respData || [];
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   registerUserData,
   createDynamicHashKeyTable,
@@ -302,4 +348,5 @@ module.exports = {
   deleteRowData,
   checkCreates3Bucket,
   uploadS3Bucket,
+  multipPartUploadS3Bucket
 };
