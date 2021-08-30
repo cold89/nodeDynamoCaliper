@@ -33,7 +33,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"app_name\":\"App2\",\n    \"app_desc\":\"shoryqDesc\"\n}",
+					"raw": "{\n    \"app_name\":\"App1\",\n    \"app_desc\":\"App1Desc1\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -77,7 +77,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"dynamicTable\": \"App2Table1\",\n    \"dynamicColumns\":[\"fname\",\"lname\",\"address\",\"pincode\"]\n}",
+					"raw": "{\n    \"dynamicTable\": \"App1Table1\",\n    \"dynamicColumns\":[\"fname\",\"lname\",\"address\",\"pincode\"]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -114,7 +114,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"dynamicTable\": \"App2Table1\",\n    \"data\": {\n        \"fname\": \"shor34eerr5\",\n        \"lname\": \"saxen112222ba11\",\n        \"tt\":\"rrr333www\",\n        \"s3File\":\"https://images.all-free-download.com/images/graphicthumb/naturex27s_canvas_513167.jpg\"\n    }\n}",
+					"raw": "{\n    \"dynamicTable\": \"App1Table1\",\n    \"data\": {\n        \"fname\": \"1srTrecoued\",\n        \"lname\": \"2nd1srTrecoued\",\n        \"tt\":\"yu\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -151,7 +151,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"dynamicTable\": \"shoryaTable4\",\n    \"uuid\":\"54e4aa54-007e-4646-9aa7-56f224235fdf\",\n    \"data\": {\n        \"fname\": \"yu44\",\n        \"lname\": \"saxena\",\n        \"tt\":\"qwe\",\n        \"someData\":\"sds\",\n        \"s3File\":\"https://images.all-free-download.com/images/graphicthumb/naturex27s_canvas_513167.jpg\"\n    }\n}",
+					"raw": "{\n    \"dynamicTable\": \"App1Table1\",\n    \"uuid\":\"d54bf365-dec3-4433-a4cd-216b330e942e\",\n    \"data\": {\n        \"fname\": \"testUpdate\",\n        \"lname\": \"saxena\",\n        \"tt\":\"qwe\",\n        \"someData\":\"sds\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -195,7 +195,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"dynamicTable\": \"AppTable2\"\n}",
+					"raw": "{\n    \"dynamicTable\": \"App1Table1\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -203,11 +203,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{NodeDynamoUrl}}user/delete-dynamnic-table",
+					"raw": "{{NodeDynamoUrl}}/user/delete-dynamnic-table",
 					"host": [
-						"{{NodeDynamoUrl}}user"
+						"{{NodeDynamoUrl}}"
 					],
 					"path": [
+						"user",
 						"delete-dynamnic-table"
 					]
 				}
@@ -231,7 +232,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"dynamicTable\": \"AppTable2\",\n    \"uuid\":\"ed50e5fb-ea83-4163-b32e-26b89f7781ec\"\n}",
+					"raw": "{\n    \"dynamicTable\": \"App1Table1\",\n    \"uuid\":\"7719162d-1c2a-42ca-b5ae-5bad491873a3\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -283,6 +284,134 @@
 					"path": [
 						"user",
 						"refresh-token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "insert-update-dynamnic-table-s3Upload",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "s3FileName",
+							"type": "file",
+							"src": "/Users/shoryasaxena/Downloads/salaryslips/naturex27s_canvas_513167.jpg"
+						},
+						{
+							"key": "dynamicTable",
+							"value": "App1Table1",
+							"type": "text"
+						},
+						{
+							"key": "fname",
+							"value": "shorys1122s2a222",
+							"type": "text"
+						},
+						{
+							"key": "lname",
+							"value": "nn123sss",
+							"type": "text"
+						},
+						{
+							"key": "check",
+							"value": "true",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{NodeDynamoUrl}}/user/insert-update-dynamnic-table-s3Upload",
+					"host": [
+						"{{NodeDynamoUrl}}"
+					],
+					"path": [
+						"user",
+						"insert-update-dynamnic-table-s3Upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "insert-update-dynamnic-table-s3Upload",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "s3FileName",
+							"type": "file",
+							"src": "/Users/shoryasaxena/Downloads/salaryslips/naturex27s_canvas_513167.jpg"
+						},
+						{
+							"key": "dynamicTable",
+							"value": "App1Table1",
+							"type": "text"
+						},
+						{
+							"key": "fname",
+							"value": "update dibe ",
+							"type": "text"
+						},
+						{
+							"key": "lname",
+							"value": "nn123sss",
+							"type": "text"
+						},
+						{
+							"key": "s3FileName",
+							"type": "file",
+							"src": "/Users/shoryasaxena/Downloads/salaryslips/naturex27s_canvas_513167.jpg",
+							"disabled": true
+						},
+						{
+							"key": "check",
+							"value": "true",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "uuid",
+							"value": "d54bf365-dec3-4433-a4cd-216b330e942e",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{NodeDynamoUrl}}/user/insert-update-dynamnic-table-s3Upload",
+					"host": [
+						"{{NodeDynamoUrl}}"
+					],
+					"path": [
+						"user",
+						"insert-update-dynamnic-table-s3Upload"
 					]
 				}
 			},
