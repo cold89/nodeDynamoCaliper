@@ -10,8 +10,7 @@ function jwt() {
             // public routes that don't require authentication
             '/user/health-check',
             '/user/authenticate',
-            '/user/register',
-            '/user/s3Upload'
+            '/user/register'
         ]
     });
 }
