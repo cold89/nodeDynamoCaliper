@@ -26,11 +26,14 @@
 		{
 			"name": "Register user",
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\":\"ankit2.com\",\n    \"desc\":\"someopass\"\n\n}",
+					"raw": "{\n    \"app_name\":\"App1\",\n    \"app_desc\":\"App1Desc1\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -38,11 +41,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8000/user/register",
+					"raw": "{{NodeDynamoUrl}}/user/register",
 					"host": [
-						"localhost"
+						"{{NodeDynamoUrl}}"
 					],
-					"port": "8000",
 					"path": [
 						"user",
 						"register"
@@ -52,13 +54,30 @@
 			"response": []
 		},
 		{
-			"name": "CreateDynamnicUserTable",
+			"name": "CreateDynamnicAppTable",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjkzMzk3NDR9.A-WdnekYZJDme-bp4UslC8vkw5os3XWzFcUdi0gw8fU",
+						"type": "text",
+						"disabled": true
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"app_id\": \"9777dc5e-051f-4251-8d46-d5e398824287\",\n    \"dynamicTable\": \"shorya1\",\n    \"dynamicColumns\":[\"fname\",\"lname\",\"address\"]\n}",
+					"raw": "{\n    \"dynamicTable\": \"App1Table1\",\n    \"dynamicColumns\":[\"fname\",\"lname\",\"address\",\"pincode\"]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -66,11 +85,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8000/user/create-dynamnic-table",
+					"raw": "{{NodeDynamoUrl}}/user/create-dynamnic-table",
 					"host": [
-						"localhost"
+						"{{NodeDynamoUrl}}"
 					],
-					"port": "8000",
 					"path": [
 						"user",
 						"create-dynamnic-table"
@@ -82,11 +100,21 @@
 		{
 			"name": "InsertDynamnicTable",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"dynamicTable\": \"shorya1\",\n    \"app_id\": \"9777dc5e-051f-4251-8d46-d5e398824287\",\n    \"data\": {\n        \"fname\": \"shorya\",\n        \"lname\": \"saxenba\",\n        \"tt\":\"rrr333\",\n        \"s3File\":\"https://images.all-free-download.com/images/graphicthumb/naturex27s_canvas_513167.jpg\"\n    }\n}",
+					"raw": "{\n    \"dynamicTable\": \"App1Table1\",\n    \"data\": {\n        \"fname\": \"1srTrecoued\",\n        \"lname\": \"2nd1srTrecoued\",\n        \"tt\":\"yu\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -94,11 +122,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8000/user/insert-update-dynamnic-table",
+					"raw": "{{NodeDynamoUrl}}/user/insert-update-dynamnic-table",
 					"host": [
-						"localhost"
+						"{{NodeDynamoUrl}}"
 					],
-					"port": "8000",
 					"path": [
 						"user",
 						"insert-update-dynamnic-table"
@@ -110,11 +137,21 @@
 		{
 			"name": "updateDynamnicTable",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"dynamicTable\": \"shorya1\",\n    \"app_id\": \"9777dc5e-051f-4251-8d46-d5e398824287\",\n    \"uuid\":\"6a056722-435a-43a1-9bec-a884912ac801\",\n    \"data\": {\n        \"fname\": \"shorya\",\n        \"lname\": \"saxenba\",\n        \"tt\":\"rrr333\",\n        \"s3File\":\"https://images.all-free-download.com/images/graphicthumb/naturex27s_canvas_513167.jpg\"\n    }\n}",
+					"raw": "{\n    \"dynamicTable\": \"App1Table1\",\n    \"uuid\":\"d54bf365-dec3-4433-a4cd-216b330e942e\",\n    \"data\": {\n        \"fname\": \"testUpdate\",\n        \"lname\": \"saxena\",\n        \"tt\":\"qwe\",\n        \"someData\":\"sds\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -122,11 +159,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8000/user/insert-update-dynamnic-table",
+					"raw": "{{NodeDynamoUrl}}/user/insert-update-dynamnic-table",
 					"host": [
-						"localhost"
+						"{{NodeDynamoUrl}}"
 					],
-					"port": "8000",
 					"path": [
 						"user",
 						"insert-update-dynamnic-table"
@@ -134,6 +170,286 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "DeleteDynamnicAPPTable",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjkzMzk3NDR9.A-WdnekYZJDme-bp4UslC8vkw5os3XWzFcUdi0gw8fU",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"dynamicTable\": \"App1Table1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{NodeDynamoUrl}}/user/delete-dynamnic-table",
+					"host": [
+						"{{NodeDynamoUrl}}"
+					],
+					"path": [
+						"user",
+						"delete-dynamnic-table"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteDataDynamnicTable",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"dynamicTable\": \"App1Table1\",\n    \"uuid\":\"7719162d-1c2a-42ca-b5ae-5bad491873a3\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{NodeDynamoUrl}}/user/insert-update-dynamnic-table",
+					"host": [
+						"{{NodeDynamoUrl}}"
+					],
+					"path": [
+						"user",
+						"insert-update-dynamnic-table"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Refresh Token",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"app_id\":\"f9160a5e-be43-4994-ada5-03db9a174086\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{NodeDynamoUrl}}/user/refresh-token",
+					"host": [
+						"{{NodeDynamoUrl}}"
+					],
+					"path": [
+						"user",
+						"refresh-token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "insert-update-dynamnic-table-s3Upload",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "s3FileName",
+							"type": "file",
+							"src": "/Users/shoryasaxena/Downloads/salaryslips/naturex27s_canvas_513167.jpg"
+						},
+						{
+							"key": "dynamicTable",
+							"value": "App1Table1",
+							"type": "text"
+						},
+						{
+							"key": "fname",
+							"value": "shorys1122s2a222",
+							"type": "text"
+						},
+						{
+							"key": "lname",
+							"value": "nn123sss",
+							"type": "text"
+						},
+						{
+							"key": "check",
+							"value": "true",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{NodeDynamoUrl}}/user/insert-update-dynamnic-table-s3Upload",
+					"host": [
+						"{{NodeDynamoUrl}}"
+					],
+					"path": [
+						"user",
+						"insert-update-dynamnic-table-s3Upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "insert-update-dynamnic-table-s3Upload",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "s3FileName",
+							"type": "file",
+							"src": "/Users/shoryasaxena/Downloads/salaryslips/naturex27s_canvas_513167.jpg"
+						},
+						{
+							"key": "dynamicTable",
+							"value": "App1Table1",
+							"type": "text"
+						},
+						{
+							"key": "fname",
+							"value": "update dibe ",
+							"type": "text"
+						},
+						{
+							"key": "lname",
+							"value": "nn123sss",
+							"type": "text"
+						},
+						{
+							"key": "s3FileName",
+							"type": "file",
+							"src": "/Users/shoryasaxena/Downloads/salaryslips/naturex27s_canvas_513167.jpg",
+							"disabled": true
+						},
+						{
+							"key": "check",
+							"value": "true",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "uuid",
+							"value": "d54bf365-dec3-4433-a4cd-216b330e942e",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{NodeDynamoUrl}}/user/insert-update-dynamnic-table-s3Upload",
+					"host": [
+						"{{NodeDynamoUrl}}"
+					],
+					"path": [
+						"user",
+						"insert-update-dynamnic-table-s3Upload"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "NodeDynamoDevUrl",
+			"value": "https://miniw719ge.execute-api.us-east-1.amazonaws.com/dev"
+		},
+		{
+			"key": "NodeDynamoLocalUrl",
+			"value": "localhost:8000"
+		},
+		{
+			"key": "auth-token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfaWQiOiJjNWQxZTAwMS1mMDU2LTRkZDktYjJhOS0zYTJlMTMwOTQzNWMiLCJpYXQiOjE2Mjk3MjQ3ODZ9.3D5lM0RGzOZs1Q4JDv724mTSFn8TPwF6lquUUSVl5Mk"
 		}
 	]
 }
