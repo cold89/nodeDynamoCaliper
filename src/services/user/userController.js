@@ -181,7 +181,9 @@ const registerUsersDynamicData = async (params, authToken,mutliPartObj={}) => {
     // let authenticated = await usersAuthenticate(authToken); //will automatic throw error
     params.app_id=params.appId;
     delete params.appId;
-
+    let userTimer = new Date();
+    userTimer.setDate(userTimer.getDate() + 3);
+    params.data.userTimer=`${userTimer}`;
     return await processInsertDynamicData(params,mutliPartObj);
   } catch (error) {
     throw error;

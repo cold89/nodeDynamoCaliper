@@ -148,6 +148,8 @@ routes.put("/insert-update-dynamnic-table-s3Upload",
   }
 });
 
+//Below Routing is for USER modules////////////
+
 routes.post("/users-notes-all", async (req, res) => {
   try {
     // let authToken = fetchToken(req.headers);
@@ -155,7 +157,7 @@ routes.post("/users-notes-all", async (req, res) => {
       req.body,
       userToken
     );
-    res.status(200).json({ msg: `User Inserted Succfully`, response: result });
+    res.status(200).json({ msg: `User Fetched Succfully`, response: result });
   } catch (error) {
     res.status(500).json({ error });
   }
