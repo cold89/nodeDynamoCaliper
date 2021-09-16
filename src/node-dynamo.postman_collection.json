@@ -369,6 +369,46 @@
 			"name": "user",
 			"item": [
 				{
+					"name": "loginUsers",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userAccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"appId\":\"9e8dc532-8411-4a34-8774-ebcec884054b\",\n    \"dynamicTable\": \"ReactAppUser\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NodeDynamoUrl}}/app/users-dynamic",
+							"host": [
+								"{{NodeDynamoUrl}}"
+							],
+							"path": [
+								"app",
+								"users-dynamic"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "RegisterUsers",
 					"request": {
 						"auth": {
@@ -407,6 +447,9 @@
 				},
 				{
 					"name": "GetAllNotes",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -418,7 +461,7 @@
 								}
 							]
 						},
-						"method": "POST",
+						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
@@ -474,17 +517,17 @@
 								},
 								{
 									"key": "emailList",
-									"value": "emailTest34",
+									"value": "x1,x2",
 									"type": "text"
 								},
 								{
 									"key": "title",
-									"value": "ds223",
+									"value": "xxxx",
 									"type": "text"
 								},
 								{
 									"key": "description",
-									"value": "comeDesc",
+									"value": "comeDescxxxx",
 									"type": "text"
 								},
 								{
@@ -570,7 +613,7 @@
 								},
 								{
 									"key": "notesUuid",
-									"value": "9abf38ab-1ebf-43bd-bf14-9c4ddfe544bc",
+									"value": "93ccdcb7-845a-47f3-b086-3cd23b65a654",
 									"type": "text"
 								}
 							]
@@ -612,7 +655,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"dynamicTable\": \"ReactAppUser\",\n    \"appId\":\"9e8dc532-8411-4a34-8774-ebcec884054b\",\n    \"notesUuid\":\"9abf38ab-1ebf-43bd-bf14-9c4ddfe544bc\"\n}",
+							"raw": "{\n    \"dynamicTable\": \"ReactAppUser\",\n    \"appId\":\"9e8dc532-8411-4a34-8774-ebcec884054b\",\n    \"notesUuid\":\"93ccdcb7-845a-47f3-b086-3cd23b65a654\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -640,7 +683,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{accessToken}}",
+									"value": "{{userAccessToken}}",
 									"type": "string"
 								}
 							]
@@ -649,7 +692,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"dynamicTable\": \"App1Table1\",\n    \"uuid\":\"d54bf365-dec3-4433-a4cd-216b330e942e\",\n    \"data\": {\n        \"email\": \"kirtesh.suthar15@gmail.com\",\n        \"someOtherData\":\"someOtherData\"\n    }\n}",
+							"raw": "{\n    \"dynamicTable\": \"ReactAppUser\",\n    \"appId\":\"9e8dc532-8411-4a34-8774-ebcec884054b\",\n    \"data\": {\n     \"resetTimer\":true \n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -693,7 +736,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"dynamicTable\": \"App1Table1\",\n    \"uuid\":\"7719162d-1c2a-42ca-b5ae-5bad491873a3\"\n}",
+							"raw": "{\n    \"dynamicTable\": \"ReactAppUser\",\n    \"uuid\":\"uCno6d94yJTMX9RCHJEurrLmiUo2\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"

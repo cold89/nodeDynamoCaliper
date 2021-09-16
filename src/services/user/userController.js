@@ -176,19 +176,87 @@ const insertAppDynamicData = async (params, authToken,mutliPartObj={}) => {
   }
 };
 
+
+const loginUsersDynamicData = async (params, authToken) => {
+  try {
+    // let authenticated = await usersAuthenticate(authToken,params.data.email); //will automatic throw error
+    let authenticated=  jwt.decode(authToken);
+    let checkAuthroizedUserData = await checkAuthroizedUser({app_id:params.appId});
+    let responseDetail = `unauthrozed User`;
+  if (checkAuthroizedUserData.length) {
+    responseDetail= await fetchNoteData(params.dynamicTable,authenticated.user_id);
+    if(!responseDetail){
+      throw {messsage:"User Not Found"}
+    }
+
+  }
+  return responseDetail
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 const registerUsersDynamicData = async (params, authToken,mutliPartObj={}) => {
   try {
     let authenticated = await usersAuthenticate(authToken,params.data.email); //will automatic throw error
     params.app_id=params.appId;
     delete params.appId;
-    let userTimer = new Date();
-    userTimer.setDate(userTimer.getDate() + 3);
-    params.data.userTimer=`${userTimer}`;
+    let  currentTimeStamp=Math.floor(Date.now() / 1000);
+    params.data.userTimer=`${currentTimeStamp+(24*60*60*3)}`;
+    //currentTimeStamp+(24*60*60*basetimerDB)-> resetTimer=true-> basetimer
+     //userTimerDB+(24*60*60*updateTimerDays)-> 
+    params.data.baseTimerDays=3;
     return await processInsertDynamicData(params,mutliPartObj,authenticated.user_id);
   } catch (error) {
     throw error;
   }
 };
+
+const updateUsersDynamicData = async (params, authToken) => {
+  try {
+    let authenticated =  jwt.decode(authToken); //will automatic throw error
+    params.app_id=params.appId;
+    delete params.appId;
+    params.uuid=authenticated.user_id;
+    // "data": { //refrence
+    //   "baseTimerDays":5
+    //    "updateTimerDays":7 //for updating days count 
+    //    "resetTimer":true //for reseting days count
+    //   }
+    return await processUpdateDynamicData(params,{});
+  } catch (error) {
+    throw error;
+  }
+};
+
+const updateTimerDaysData= async(params,updateTimerDays)=>{
+  try {
+    responseDetail= await fetchNoteData(params.dynamicTable,params.uuid);
+    return responseDetail.userTimer+(24*60*60*`${JSON.parse(updateTimerDays)}`);
+  } catch (error) {
+   throw error; 
+  }
+}
+
+const resetTimerDaysData= async(params)=>{
+  try {
+    let  currentTimeStamp=Math.floor(Date.now() / 1000);
+    responseDetail= await fetchNoteData(params.dynamicTable,params.uuid);
+    return currentTimeStamp+(24*60*60*`${JSON.parse(responseDetail.baseTimerDays)}`);
+  } catch (error) {
+   throw error; 
+  }
+}
+
+const updateBaseTimerDaysData= async(params,baseTimerDays)=>{
+  try {
+    responseDetail= await fetchNoteData(params.dynamicTable,params.uuid);
+    return responseDetail.userTimer+(24*60*60*`${JSON.parse(baseTimerDays)}`);
+  } catch (error) {
+   throw error; 
+  }
+}
 
 const processInsertDynamicData= async (params,mutliPartObj={},customUuid=undefined)=>{
   try {
@@ -236,7 +304,6 @@ const s3MultißPartUpload =async(req,authToken)=>{
     throw error
   }
  }
-
 
 const updates3MultiPartUpload =async(req,authToken)=>{
   try {
@@ -307,7 +374,6 @@ const updates3MultiPartUpload =async(req,authToken)=>{
   }
 };
 
-
 const updateDynamicSubUserData = async (params, authToken,mutliPartObj={}) => {
   try {
     let authenticated = await appAuthenticate(authToken); //will automatic throw error
@@ -343,6 +409,18 @@ const processUpdateDynamicData= async (params,mutliPartObj={},notesDeleteFlag=fa
         // await uploads3Bucket({...params ,mutliPartObj});
         // }
         params.data.notes= await processNoteData(params.data.notes,params.dynamicTable,dynamicPrimaryKey,notesDeleteFlag);
+      }
+
+      if(params.data.updateTimerDays){
+        params.data.userTimer =await updateTimerDaysData(params,params.data.updateTimerDays);
+        delete(params.data.updateTimerDays);
+      }
+      if(params.data.resetTimer){
+        params.data.userTimer =await resetTimerDaysData(params);
+        delete(params.data.resetTimer);
+      }
+      if(params.data.baseTimerDays){
+        params.data.userTimer=await updateBaseTimerDaysData(params,params.data.baseTimerDays);
       }
       let UpdateExpression = `set `;
       let dataMain = Object.keys(params.data);
@@ -556,7 +634,9 @@ module.exports = {
   checkAuthroizedUser,
   createJwtToken,
   updates3MultiPartUpload,
+  loginUsersDynamicData,
   registerUsersDynamicData,
+  updateUsersDynamicData,
   getAllUsersNotesData,
   insertUpdateUsersNotesData
 };

@@ -148,6 +148,20 @@ routes.put("/insert-update-dynamnic-table-s3Upload",
 });
 
 //Below Routing is for USER modules////////////
+
+routes.get("/users-dynamic", async (req, res) => {
+  try {
+    let userToken = fetchToken(req.headers);
+    let result = await userController.loginUsersDynamicData(
+      req.body,
+      userToken
+    );
+    res.status(200).json({ msg: `User Logged in  Succfully`, response: result });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+});
+
 routes.post("/users-dynamic", async (req, res) => {
   try {
     let userToken = fetchToken(req.headers);
@@ -161,7 +175,20 @@ routes.post("/users-dynamic", async (req, res) => {
   }
 });
 
-routes.post("/users-notes-all", async (req, res) => {
+routes.put("/users-dynamic", async (req, res) => {
+  try {
+    let userToken = fetchToken(req.headers);
+    let result = await userController.updateUsersDynamicData(
+      req.body,
+      userToken
+    );
+    res.status(200).json({ msg: `User Inserted Succfully`, response: result });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+});
+
+routes.get("/users-notes-all", async (req, res) => {
   try {
     let usersToken = fetchToken(req.headers);
     let result = await userController.getAllUsersNotesData(
