@@ -385,7 +385,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"appId\":\"9e8dc532-8411-4a34-8774-ebcec884054b\",\n    \"dynamicTable\": \"ReactAppUser\",\n    \"data\": {\n        \"email\": \"shorya.saxena@gmail.com\",\n        \"password\": \"password\"\n    }\n}",
+							"raw": "{\n    \"appId\":\"9e8dc532-8411-4a34-8774-ebcec884054b\",\n    \"dynamicTable\": \"ReactAppUser\",\n    \"data\": {\n        \"email\": \"ss123@gmail.com\",\n        \"password\": \"password\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -487,6 +487,50 @@
 					"response": []
 				},
 				{
+					"name": "GetAllNotes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjkzMzk3NDR9.A-WdnekYZJDme-bp4UslC8vkw5os3XWzFcUdi0gw8fU",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"dynamicTable\": \"ReactAppUser\",\n    \"appId\":\"9e8dc532-8411-4a34-8774-ebcec884054b\",\n    \"uuid\":\"2b0a08f8-5e8d-4c8d-aa1a-55ace99a2981\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NodeDynamoUrl}}/app/users-notes-all",
+							"host": [
+								"{{NodeDynamoUrl}}"
+							],
+							"path": [
+								"app",
+								"users-notes-all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "InsertNotes",
 					"request": {
 						"auth": {
@@ -542,7 +586,8 @@
 								{
 									"key": "notesUuid",
 									"value": "8ba95055-98c8-44e8-ba8f-cbd5d950afe6",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								}
 							]
 						},
@@ -656,7 +701,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"dynamicTable\": \"ReactAppUser\",\n    \"appId\":\"9e8dc532-8411-4a34-8774-ebcec884054b\",\n    \"parentuuid\":\"0c2a846f-9871-4579-baf1-7bfd948be696\",\n    \"notesUuid\":\"0319daab-42f2-49ec-a97c-d459258daff5\"\n}",
+							"raw": "{\n    \"dynamicTable\": \"ReactAppUser\",\n    \"appId\":\"9e8dc532-8411-4a34-8774-ebcec884054b\",\n    \"parentuuid\":\"0c2a846f-9871-4579-baf1-7bfd948be696\",\n    \"notesUuid\":\"15885121-84ef-4421-a974-d3c385c56359\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
