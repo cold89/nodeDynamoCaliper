@@ -148,6 +148,18 @@ routes.put("/insert-update-dynamnic-table-s3Upload",
   }
 });
 
+routes.post("/users-notes-all", async (req, res) => {
+  try {
+    // let authToken = fetchToken(req.headers);
+    let result = await userController.getAllUsersNotesData(
+      req.body,
+      userToken
+    );
+    res.status(200).json({ msg: `User Inserted Succfully`, response: result });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+});
 
 routes.post("/users-dynamic", async (req, res) => {
   try {

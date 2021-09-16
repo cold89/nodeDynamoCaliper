@@ -257,6 +257,23 @@ const updates3MultiPartUpload =async(req,authToken)=>{
   }
  }
 
+ const getAllUsersNotesData = async (params, authToken) => {
+   try {
+         // let authenticated = await usersAuthenticate(authToken); //will automatic throw error
+
+  let checkAuthroizedUserData = await checkAuthroizedUser({app_id:params.appId});
+  let responseDetail = `unauthrozed User`;
+  if (checkAuthroizedUserData.length) {
+    responseDetail= await fetchNoteData(params.dynamicTable,params.uuid);
+
+  }
+  return responseDetail;
+   } catch (error) {
+     throw error;
+   }
+
+
+ }
  const insertUpdateUsersNotesData = async (req, authToken,notesDeleteFlag=false) => {
   try {
     // let authenticated = await usersAuthenticate(authToken); //will automatic throw error
@@ -532,5 +549,6 @@ module.exports = {
   createJwtToken,
   updates3MultiPartUpload,
   registerUsersDynamicData,
+  getAllUsersNotesData,
   insertUpdateUsersNotesData
 };
