@@ -1,4 +1,3 @@
-const userToken=`eyJhbGciOiJSUzI1NiIsImtpZCI6IjEyYWZkYjliOGJmZmMyY2M4ZTU4NGQ2ZWE2ODlmYzEwYTg3MGI2NzgiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vaGFkaS1hcHAtZTZlNWUiLCJhdWQiOiJoYWRpLWFwcC1lNmU1ZSIsImF1dGhfdGltZSI6MTYzMTcxNzUyOSwidXNlcl9pZCI6InVDbm82ZDk0eUpUTVg5UkNISkV1cnJMbWlVbzIiLCJzdWIiOiJ1Q25vNmQ5NHlKVE1YOVJDSEpFdXJyTG1pVW8yIiwiaWF0IjoxNjMxNzE3NTI5LCJleHAiOjE2MzE3MjExMjksImVtYWlsIjoia2lydGVzaC5zdXRoYXIxNUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsia2lydGVzaC5zdXRoYXIxNUBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.llcTOGen4y-EoKwwEZ6CLXb4lm0w1fFPjuwiqX8J8y7E5dqeR5PwTYQsLNTMbkp_QzvtJHWEbMdhKkpPw2mBM6-MAxjQa4kZ-uVL7fAIg1VRPPG1dW-0q9l6pIf3A9qiHQiM51tZH4gIQWtV1CXmEG7qiYCNmrcHpCApRf8u90Ls0Iq49UAwLdQPPMr7vTb00FinyxS5_7WGxN4FzrrhrkwUg_r8Z91nBrafKKM5Xb0sE5n0eb_W2hCsLPJDmLR6m5JuecF7HJstwUI91K1cdFp221vCWJgkX2PrLLyrn_M5sXI8JWnRSie9s1eFrx-cghMtwaMVafm4cqoKdpq7qw`;
 const userController = require("./userController");
 const express = require("express");
 const multer =require('multer');
@@ -149,23 +148,9 @@ routes.put("/insert-update-dynamnic-table-s3Upload",
 });
 
 //Below Routing is for USER modules////////////
-
-routes.post("/users-notes-all", async (req, res) => {
-  try {
-    // let authToken = fetchToken(req.headers);
-    let result = await userController.getAllUsersNotesData(
-      req.body,
-      userToken
-    );
-    res.status(200).json({ msg: `User Fetched Succfully`, response: result });
-  } catch (error) {
-    res.status(500).json({ error });
-  }
-});
-
 routes.post("/users-dynamic", async (req, res) => {
   try {
-    // let authToken = fetchToken(req.headers);
+    let userToken = fetchToken(req.headers);
     let result = await userController.registerUsersDynamicData(
       req.body,
       userToken
@@ -176,12 +161,24 @@ routes.post("/users-dynamic", async (req, res) => {
   }
 });
 
+routes.post("/users-notes-all", async (req, res) => {
+  try {
+    let usersToken = fetchToken(req.headers);
+    let result = await userController.getAllUsersNotesData(
+      req.body,
+      usersToken
+    );
+    res.status(200).json({ msg: `User Fetched Succfully`, response: result });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+});
 
-routes.put("/users-notes",  
+routes.post("/users-notes",  
   multer({ dest: '/tmp/', limits: { fieldSize: 8 * 1024 * 1024 } })
   .single('s3FileName'),async (req, res) => {
   try {
-    // let authToken = fetchToken(req.headers);
+    let userToken = fetchToken(req.headers);
     let result = await userController.insertUpdateUsersNotesData(
       req,
       userToken
@@ -192,10 +189,26 @@ routes.put("/users-notes",
   }
 });
 
+
+routes.put("/users-notes",  
+  multer({ dest: '/tmp/', limits: { fieldSize: 8 * 1024 * 1024 } })
+  .single('s3FileName'),async (req, res) => {
+  try {
+    let userToken = fetchToken(req.headers);
+    let result = await userController.insertUpdateUsersNotesData(
+      req,
+      userToken
+    );
+    res.status(200).json({ msg: `Notes Updated Succfully`, response: result });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+});
+
 routes.delete("/users-notes", async (req, res) => {
   try {
-  // let authToken = fetchToken(req.headers);
-  let result = await userController.insertUpdateUsersNotesData(
+    let userToken = fetchToken(req.headers);
+    let result = await userController.insertUpdateUsersNotesData(
     req,
     userToken,
    true

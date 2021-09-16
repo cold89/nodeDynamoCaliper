@@ -178,21 +178,21 @@ const insertAppDynamicData = async (params, authToken,mutliPartObj={}) => {
 
 const registerUsersDynamicData = async (params, authToken,mutliPartObj={}) => {
   try {
-    // let authenticated = await usersAuthenticate(authToken); //will automatic throw error
+    let authenticated = await usersAuthenticate(authToken,params.data.email); //will automatic throw error
     params.app_id=params.appId;
     delete params.appId;
     let userTimer = new Date();
     userTimer.setDate(userTimer.getDate() + 3);
     params.data.userTimer=`${userTimer}`;
-    return await processInsertDynamicData(params,mutliPartObj);
+    return await processInsertDynamicData(params,mutliPartObj,authenticated.user_id);
   } catch (error) {
     throw error;
   }
 };
 
-const processInsertDynamicData= async (params,mutliPartObj={})=>{
+const processInsertDynamicData= async (params,mutliPartObj={},customUuid=undefined)=>{
   try {
-    let dynamicPrimaryKey = uuidv4();
+    let dynamicPrimaryKey = (customUuid)?customUuid:uuidv4();
       let reqItemObj = params.data;
       let dynamicColumnsObj = {
         Item: {
@@ -261,12 +261,12 @@ const updates3MultiPartUpload =async(req,authToken)=>{
 
  const getAllUsersNotesData = async (params, authToken) => {
    try {
-         // let authenticated = await usersAuthenticate(authToken); //will automatic throw error
-
+    // let authenticated = await usersAuthenticate(authToken); //will automatic throw error
+  let authenticated= jwt.decode(authToken);
   let checkAuthroizedUserData = await checkAuthroizedUser({app_id:params.appId});
   let responseDetail = `unauthrozed User`;
   if (checkAuthroizedUserData.length) {
-    responseDetail= await fetchNoteData(params.dynamicTable,params.uuid);
+    responseDetail= await fetchNoteData(params.dynamicTable,authenticated.user_id);
 
   }
   return responseDetail;
@@ -278,13 +278,13 @@ const updates3MultiPartUpload =async(req,authToken)=>{
  }
  const insertUpdateUsersNotesData = async (req, authToken,notesDeleteFlag=false) => {
   try {
-    // let authenticated = await usersAuthenticate(authToken); //will automatic throw error
+    let authenticated = jwt.decode(authToken); //will automatic throw error
 
   
     let dynamicTable=req.body.dynamicTable;
-    let parentuuid= req.body.parentuuid;
+    let parentuuid= authenticated.user_id;
     let app_id=req.body.appId;
-    let notesUuid=(req.body.notesUuid)?req.body.notesUuid:uuidv4();
+    let notesUuid=(req.body.notesUuid)?req.body.notesUuid:uuidv4(); 
     delete req.body["dynamicTable"];
     delete req.body["parentuuid"];
     delete req.body["appId"];
@@ -337,8 +337,11 @@ const processUpdateDynamicData= async (params,mutliPartObj={},notesDeleteFlag=fa
         //will update the s3 bucket
         await uploads3Bucket({...params ,mutliPartObj});
       }
-      if (params.data.notes ) {
-        //will update the s3 bucket
+      if (params.data.notes) {
+        // if(params.data.notes.notesImageUrl){
+        //    //will update the s3 bucket
+        // await uploads3Bucket({...params ,mutliPartObj});
+        // }
         params.data.notes= await processNoteData(params.data.notes,params.dynamicTable,dynamicPrimaryKey,notesDeleteFlag);
       }
       let UpdateExpression = `set `;
@@ -508,10 +511,13 @@ const appAuthenticate = async (token) => {
   }
 };
 
-const usersAuthenticate = async (token) => {
+const usersAuthenticate = async (token,email) => {
   try {
-    let decoded = jwt.verify(token);
-      return await processAuthenticate({app})
+    let decoded = jwt.decode(token);
+    if(decoded.email!=email){
+      throw { message: `Unauthroized User` };
+    }
+      return decoded;
   } catch (err) {
     throw err;
   }

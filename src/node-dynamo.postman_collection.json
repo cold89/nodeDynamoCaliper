@@ -376,7 +376,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{accessToken}}",
+									"value": "{{userAccessToken}}",
 									"type": "string"
 								}
 							]
@@ -385,7 +385,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"appId\":\"9e8dc532-8411-4a34-8774-ebcec884054b\",\n    \"dynamicTable\": \"ReactAppUser\",\n    \"data\": {\n        \"email\": \"ss123@gmail.com\",\n        \"password\": \"password\"\n    }\n}",
+							"raw": "{\n    \"appId\":\"9e8dc532-8411-4a34-8774-ebcec884054b\",\n    \"dynamicTable\": \"ReactAppUser\",\n    \"data\": {\n        \"email\": \"kirtesh.suthar15@gmail.com\",\n        \"password\": \"password\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -406,7 +406,234 @@
 					"response": []
 				},
 				{
-					"name": "UpdateUserDynamicData",
+					"name": "GetAllNotes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userAccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjkzMzk3NDR9.A-WdnekYZJDme-bp4UslC8vkw5os3XWzFcUdi0gw8fU",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"dynamicTable\": \"ReactAppUser\",\n    \"appId\":\"9e8dc532-8411-4a34-8774-ebcec884054b\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NodeDynamoUrl}}/app/users-notes-all",
+							"host": [
+								"{{NodeDynamoUrl}}"
+							],
+							"path": [
+								"app",
+								"users-notes-all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InsertNotes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userAccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "dynamicTable",
+									"value": "ReactAppUser",
+									"type": "text"
+								},
+								{
+									"key": "emailList",
+									"value": "emailTest34",
+									"type": "text"
+								},
+								{
+									"key": "title",
+									"value": "ds223",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "comeDesc",
+									"type": "text"
+								},
+								{
+									"key": "appId",
+									"value": "9e8dc532-8411-4a34-8774-ebcec884054b",
+									"type": "text"
+								},
+								{
+									"key": "notesImageUrl",
+									"type": "file",
+									"src": "/Users/shoryasaxena/Downloads/naturex27s_canvas_513167.jpg",
+									"disabled": true
+								},
+								{
+									"key": "notesUuid",
+									"value": "8ba95055-98c8-44e8-ba8f-cbd5d950afe6",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{NodeDynamoUrl}}/app/users-notes",
+							"host": [
+								"{{NodeDynamoUrl}}"
+							],
+							"path": [
+								"app",
+								"users-notes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateNotes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userAccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "s3FileName",
+									"type": "file",
+									"src": "/Users/shoryasaxena/Downloads/naturex27s_canvas_513167.jpg",
+									"disabled": true
+								},
+								{
+									"key": "dynamicTable",
+									"value": "ReactAppUser",
+									"type": "text"
+								},
+								{
+									"key": "emailList",
+									"value": "uiui",
+									"type": "text"
+								},
+								{
+									"key": "title",
+									"value": "TestAgainwww",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "dddd",
+									"type": "text"
+								},
+								{
+									"key": "appId",
+									"value": "9e8dc532-8411-4a34-8774-ebcec884054b",
+									"type": "text"
+								},
+								{
+									"key": "notesUuid",
+									"value": "9abf38ab-1ebf-43bd-bf14-9c4ddfe544bc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{NodeDynamoUrl}}/app/users-notes",
+							"host": [
+								"{{NodeDynamoUrl}}"
+							],
+							"path": [
+								"app",
+								"users-notes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteNotes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userAccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjkzMzk3NDR9.A-WdnekYZJDme-bp4UslC8vkw5os3XWzFcUdi0gw8fU",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"dynamicTable\": \"ReactAppUser\",\n    \"appId\":\"9e8dc532-8411-4a34-8774-ebcec884054b\",\n    \"notesUuid\":\"9abf38ab-1ebf-43bd-bf14-9c4ddfe544bc\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NodeDynamoUrl}}/app/users-notes",
+							"host": [
+								"{{NodeDynamoUrl}}"
+							],
+							"path": [
+								"app",
+								"users-notes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateUsers",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -443,7 +670,7 @@
 					"response": []
 				},
 				{
-					"name": "DeleteUserDynamicData",
+					"name": "DeleteUsers",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -481,241 +708,6 @@
 							"path": [
 								"app",
 								"users-dynamic"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GetAllNotes",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjkzMzk3NDR9.A-WdnekYZJDme-bp4UslC8vkw5os3XWzFcUdi0gw8fU",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"dynamicTable\": \"ReactAppUser\",\n    \"appId\":\"9e8dc532-8411-4a34-8774-ebcec884054b\",\n    \"uuid\":\"2b0a08f8-5e8d-4c8d-aa1a-55ace99a2981\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{NodeDynamoUrl}}/app/users-notes-all",
-							"host": [
-								"{{NodeDynamoUrl}}"
-							],
-							"path": [
-								"app",
-								"users-notes-all"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "InsertNotes",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "s3FileName",
-									"type": "file",
-									"src": "/Users/shoryasaxena/Downloads/naturex27s_canvas_513167.jpg"
-								},
-								{
-									"key": "dynamicTable",
-									"value": "ReactAppUser",
-									"type": "text"
-								},
-								{
-									"key": "emailList",
-									"value": "emailTest1fdfdfff,emailTestsdfsdf",
-									"type": "text"
-								},
-								{
-									"key": "title",
-									"value": "someaTitile198",
-									"type": "text"
-								},
-								{
-									"key": "description",
-									"value": "hjhasdbjsadbjd",
-									"type": "text"
-								},
-								{
-									"key": "parentuuid",
-									"value": "0c2a846f-9871-4579-baf1-7bfd948be696",
-									"type": "text"
-								},
-								{
-									"key": "appId",
-									"value": "9e8dc532-8411-4a34-8774-ebcec884054b",
-									"type": "text"
-								},
-								{
-									"key": "notesUuid",
-									"value": "8ba95055-98c8-44e8-ba8f-cbd5d950afe6",
-									"type": "text",
-									"disabled": true
-								}
-							]
-						},
-						"url": {
-							"raw": "{{NodeDynamoUrl}}/app/users-notes",
-							"host": [
-								"{{NodeDynamoUrl}}"
-							],
-							"path": [
-								"app",
-								"users-notes"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "UpdateNotes",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "s3FileName",
-									"type": "file",
-									"src": "/Users/shoryasaxena/Downloads/naturex27s_canvas_513167.jpg"
-								},
-								{
-									"key": "dynamicTable",
-									"value": "ReactAppUser",
-									"type": "text"
-								},
-								{
-									"key": "emailList",
-									"value": "uiui",
-									"type": "text"
-								},
-								{
-									"key": "title",
-									"value": "TestAgainwww",
-									"type": "text"
-								},
-								{
-									"key": "description",
-									"value": "dddd",
-									"type": "text"
-								},
-								{
-									"key": "parentuuid",
-									"value": "0c2a846f-9871-4579-baf1-7bfd948be696",
-									"type": "text"
-								},
-								{
-									"key": "appId",
-									"value": "9e8dc532-8411-4a34-8774-ebcec884054b",
-									"type": "text"
-								},
-								{
-									"key": "notesUuid",
-									"value": "15885121-84ef-4421-a974-d3c385c56359",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{NodeDynamoUrl}}/app/users-notes",
-							"host": [
-								"{{NodeDynamoUrl}}"
-							],
-							"path": [
-								"app",
-								"users-notes"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "DeleteNotes",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjkzMzk3NDR9.A-WdnekYZJDme-bp4UslC8vkw5os3XWzFcUdi0gw8fU",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"dynamicTable\": \"ReactAppUser\",\n    \"appId\":\"9e8dc532-8411-4a34-8774-ebcec884054b\",\n    \"parentuuid\":\"0c2a846f-9871-4579-baf1-7bfd948be696\",\n    \"notesUuid\":\"15885121-84ef-4421-a974-d3c385c56359\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{NodeDynamoUrl}}/app/users-notes",
-							"host": [
-								"{{NodeDynamoUrl}}"
-							],
-							"path": [
-								"app",
-								"users-notes"
 							]
 						}
 					},

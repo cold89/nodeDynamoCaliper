@@ -4,17 +4,17 @@ const config = require('../config.json');
 
 module.exports = jwt;
 
-// const secret = jwksRsa.expressJwtSecret({
-//     cache: true,
-//     rateLimit: true,
-//     jwksRequestsPerMinute: 5,
-//     jwksUri: 'https://<YOUR_AUTH0_DOMAIN>/.well-known/jwks.json',
-//   })
+const secret = jwksRsa.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: 'firebase_response.json',
+  })
 
   
 function jwt() {
-    const { secret } = config;
-    return expressJwt({ secret, algorithms: ['HS256'] }).unless({
+    //  const secret  = ``;
+    return expressJwt({ secret, algorithms: ['RS256'] }).unless({
         path: [
             // public routes that don't require authentication
             '/app/health-check',

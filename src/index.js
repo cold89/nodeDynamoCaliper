@@ -12,7 +12,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // use JWT auth to secure the api
-app.use(jwt());
+// app.use(jwt());
 
 app.use('/app', userRoutes.routes);
 
