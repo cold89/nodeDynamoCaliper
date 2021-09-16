@@ -26,7 +26,7 @@ const refreshRegisterUserToken = async (params, authToken) => {
     console.log(
       `refreshRegisterUserToken : Start => params ${JSON.stringify(params)}`
     );
-    let authenticated = await authenticate(authToken); //will automatic throw error
+    let authenticated = await appAuthenticate(authToken); //will automatic throw error
     console.log(
       `refreshRegisterUserToken : In Progreess / authenticated => Success`
     );
@@ -47,7 +47,7 @@ const createDynamicAppTable = async (params, authToken) => {
     console.log(
       `createDynamicAppTable : Start => params ${JSON.stringify(params)}`
     );
-    let authenticated = await authenticate(authToken); //will automatic throw error
+    let authenticated = await appAuthenticate(authToken); //will automatic throw error
     console.log(
       `createDynamicAppTable : In Progreess / authenticated => Success`
     );
@@ -116,7 +116,7 @@ const deleteDynamicAppTable = async (params, authToken) => {
     console.log(
       `deleteDynamicAppTable : Start => params ${JSON.stringify(params)}`
     );
-    let authenticated = await authenticate(authToken); //will automatic throw error
+    let authenticated = await appAuthenticate(authToken); //will automatic throw error
     console.log(
       `deleteDynamicAppTable : In Progreess / authenticated => Success`
     );
@@ -166,39 +166,58 @@ const deleteDynamicAppTable = async (params, authToken) => {
   }
 };
 
-const insertDynamicSubUserData = async (params, authToken,mutliPartObj={}) => {
+const insertAppDynamicData = async (params, authToken,mutliPartObj={}) => {
   try {
-    let authenticated = await authenticate(authToken); //will automatic throw error
+    let authenticated = await appAuthenticate(authToken); //will automatic throw error
     params.app_id = authenticated.app_id;
-
-    let dynamicPrimaryKey = uuidv4();
-    let reqItemObj = params.data;
-    let dynamicColumnsObj = {
-      Item: {
-        ...reqItemObj,
-        uuid: dynamicPrimaryKey,
-      },
-      TableName: params.dynamicTable,
-    };
-
-    let checkAuthroizedUserData = await checkAuthroizedUser(params);
-    let responseDetail = `unauthrozed User`;
-
-    if (checkAuthroizedUserData.length) {
-      if (params.data.s3File || mutliPartObj.isMutliPart) {
-        //will update the s3 bucket
-        await uploads3Bucket({ uuid: dynamicPrimaryKey, ...params ,mutliPartObj});
-      }
-      let insertedData = await userProvider.insertRowData(dynamicColumnsObj);
-      responseDetail = { processData: dynamicColumnsObj, ...insertedData };
-    }
-    return responseDetail;
+    return await processInsertDynamicData(params,mutliPartObj);
   } catch (error) {
     throw error;
   }
 };
 
-const s3MultiPartUpload =async(req,authToken)=>{
+const registerUsersDynamicData = async (params, authToken,mutliPartObj={}) => {
+  try {
+    // let authenticated = await usersAuthenticate(authToken); //will automatic throw error
+    params.app_id=params.appId;
+    delete params.appId;
+
+    return await processInsertDynamicData(params,mutliPartObj);
+  } catch (error) {
+    throw error;
+  }
+};
+
+const processInsertDynamicData= async (params,mutliPartObj={})=>{
+  try {
+    let dynamicPrimaryKey = uuidv4();
+      let reqItemObj = params.data;
+      let dynamicColumnsObj = {
+        Item: {
+          ...reqItemObj,
+          uuid: dynamicPrimaryKey,
+        },
+        TableName: params.dynamicTable,
+      };
+  
+      let checkAuthroizedUserData = await checkAuthroizedUser(params);
+      let responseDetail = `unauthrozed User`;
+  
+      if (checkAuthroizedUserData.length) {
+        if (params.data.s3File || mutliPartObj.isMutliPart) {
+          //will update the s3 bucket
+          await uploads3Bucket({ uuid: dynamicPrimaryKey, ...params ,mutliPartObj});
+        }
+        let insertedData = await userProvider.insertRowData(dynamicColumnsObj);
+        responseDetail = { processData: dynamicColumnsObj, ...insertedData };
+      }
+      return responseDetail;
+  } catch (error) {
+    throw error;
+  }
+  }
+
+const s3MultißPartUpload =async(req,authToken)=>{
   try {
     let paramsReqFileObj={
       isMutliPart:true,
@@ -210,7 +229,7 @@ const s3MultiPartUpload =async(req,authToken)=>{
       dynamicTable:dynamicTable,
       data:req.body
     }
- await insertDynamicSubUserData(paramsBody,authToken,paramsReqFileObj);
+ await insertAppDynamicData(paramsBody,authToken,paramsReqFileObj);
   } catch (error) {
     throw error
   }
@@ -237,10 +256,51 @@ const updates3MultiPartUpload =async(req,authToken)=>{
     throw error
   }
  }
+
+ const insertUpdateUsersNotesData = async (req, authToken,notesDeleteFlag=false) => {
+  try {
+    // let authenticated = await usersAuthenticate(authToken); //will automatic throw error
+
+  
+    let dynamicTable=req.body.dynamicTable;
+    let parentuuid= req.body.parentuuid;
+    let app_id=req.body.appId;
+    let notesUuid=(req.body.notesUuid)?req.body.notesUuid:uuidv4();
+    delete req.body["dynamicTable"];
+    delete req.body["parentuuid"];
+    delete req.body["appId"];
+    delete req.body["notesUuid"];
+    let notesObj=notesUuid
+  if(notesDeleteFlag){
+    notesObj=notesUuid;
+  }else{
+    notesObj={[`${notesUuid}`]:req.body}
+  }
+    let paramsBody={
+      dynamicTable:dynamicTable,
+      uuid:parentuuid,
+      app_id:app_id,
+      data:{notes:notesObj}
+    }
+ await processUpdateDynamicData(paramsBody,{},notesDeleteFlag);
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 const updateDynamicSubUserData = async (params, authToken,mutliPartObj={}) => {
   try {
-    let authenticated = await authenticate(authToken); //will automatic throw error
+    let authenticated = await appAuthenticate(authToken); //will automatic throw error
     params = { ...authenticated, ...params };
+    return await processUpdateDynamicData(params,mutliPartObj)
+  } catch (error) {
+    throw error;
+  }
+};
+
+const processUpdateDynamicData= async (params,mutliPartObj={},notesDeleteFlag=false)=>{
+  try {
     let dynamicPrimaryKey = params.uuid;
     let reqItemObj = params.data;
     let dynamicColumnsObj = {
@@ -257,6 +317,10 @@ const updateDynamicSubUserData = async (params, authToken,mutliPartObj={}) => {
       if (params.data.s3File || mutliPartObj.isMutliPart) {
         //will update the s3 bucket
         await uploads3Bucket({...params ,mutliPartObj});
+      }
+      if (params.data.notes ) {
+        //will update the s3 bucket
+        params.data.notes= await processNoteData(params.data.notes,params.dynamicTable,dynamicPrimaryKey,notesDeleteFlag);
       }
       let UpdateExpression = `set `;
       let dataMain = Object.keys(params.data);
@@ -288,11 +352,43 @@ const updateDynamicSubUserData = async (params, authToken,mutliPartObj={}) => {
   } catch (error) {
     throw error;
   }
-};
+  }
 
+const processNoteData= async (notesData,dynamicTable,uuid,notesDeleteFlag=false)=>{
+  try {
+    let scanNoteData= await fetchNoteData(dynamicTable,uuid);
+  if(scanNoteData.notes){
+    if(notesDeleteFlag){
+      delete(scanNoteData.notes[`${notesData}`]);
+      notesData=scanNoteData.notes;
+    }else{
+      notesData={...scanNoteData.notes,...notesData};//will update the data as uuid as key
+    }    
+  }
+  return notesData;
+  } catch (error) {
+    throw error
+  }
+  
+}
+
+const fetchNoteData= async (dynamicTable,uuid)=>{
+  let paramsObj = {
+    TableName: dynamicTable,
+    FilterExpression: "#uuid=:uuid_value",
+    ExpressionAttributeNames: {
+      "#uuid": "uuid",
+    },
+    ExpressionAttributeValues: {
+      ":uuid_value": uuid,
+    },
+  };
+  let dynamicTableData = await userProvider.queryData(paramsObj);
+  return dynamicTableData[0];
+}
 const deleteDynamicSubUserData = async (params, authToken) => {
   try {
-    let authenticated = await authenticate(authToken); //will automatic throw error
+    let authenticated = await appAuthenticate(authToken); //will automatic throw error
     params = { ...authenticated, ...params };
     let dynamicPrimaryKey = params.uuid;
 
@@ -370,7 +466,7 @@ const createJwtToken = async (app_id) => {
   }
 };
 
-const authenticate = async (token) => {
+const appAuthenticate = async (token) => {
   try {
     let decoded = jwt.verify(token, config.secret);
     let paramsObj = {
@@ -393,17 +489,48 @@ const authenticate = async (token) => {
   }
 };
 
+const usersAuthenticate = async (token) => {
+  try {
+    let decoded = jwt.verify(token);
+      return await processAuthenticate({app})
+  } catch (err) {
+    throw err;
+  }
+};
+
+const processAuthenticate = async (paramsData) => {
+  try {
+    let paramsObj = {
+      TableName: `apps`,
+      FilterExpression: "#app_id=:app_id_value",
+      ExpressionAttributeNames: {
+        "#app_id": "app_id",
+      },
+      ExpressionAttributeValues: {
+        ":app_id_value": paramsData.app_id,
+      },
+    };
+    let checkApiId = await userProvider.queryData(paramsObj);
+    if (!checkApiId.length) {
+      throw { message: `Unauthroized User` };
+    }
+    return decoded;
+  } catch (err) {
+    throw err;
+  }
+};
+
 module.exports = {
   registerUserData,
   refreshRegisterUserToken,
   createDynamicAppTable,
   deleteDynamicAppTable,
-  insertDynamicSubUserData,
+  insertAppDynamicData,
   updateDynamicSubUserData,
   deleteDynamicSubUserData,
   checkAuthroizedUser,
   createJwtToken,
-  authenticate,
-  s3MultiPartUpload,
-  updates3MultiPartUpload
+  updates3MultiPartUpload,
+  registerUsersDynamicData,
+  insertUpdateUsersNotesData
 };

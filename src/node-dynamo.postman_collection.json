@@ -6,372 +6,677 @@
 	},
 	"item": [
 		{
-			"name": "New Request",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:8000/user",
-					"host": [
-						"localhost"
-					],
-					"port": "8000",
-					"path": [
-						"user"
-					]
+			"name": "admin",
+			"item": [
+				{
+					"name": "CreateAppMapping",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"app_name\":\"ReactApp\",\n    \"app_desc\":\"Will have data for the from ReactApp\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NodeDynamoUrl}}/app/register",
+							"host": [
+								"{{NodeDynamoUrl}}"
+							],
+							"path": [
+								"app",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateAppTable",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"dynamicTable\": \"ReactAppUse111r\",\n    \"dynamicColumns\":[\"dd\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://w7krglnmwe.execute-api.us-east-1.amazonaws.com/dev/app/create-dynamnic-table",
+							"protocol": "https",
+							"host": [
+								"w7krglnmwe",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"app",
+								"create-dynamnic-table"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteAppData",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"dynamicTable\": \"App1Table1\",\n    \"uuid\":\"7719162d-1c2a-42ca-b5ae-5bad491873a3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NodeDynamoUrl}}/app/insert-update-dynamnic-table",
+							"host": [
+								"{{NodeDynamoUrl}}"
+							],
+							"path": [
+								"app",
+								"insert-update-dynamnic-table"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InsertAppData",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"dynamicTable\": \"ReactAppUser\",\n    \"data\": {\n        \"email\": \"someEamil@gmail.com\",\n        \"password\": \"password\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NodeDynamoUrl}}/app/insert-update-dynamnic-table",
+							"host": [
+								"{{NodeDynamoUrl}}"
+							],
+							"path": [
+								"app",
+								"insert-update-dynamnic-table"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateAppData",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{   \"appId\":\"appId\",\n    \"dynamicTable\": \"App1Table1\",\n    \"uuid\":\"d54bf365-dec3-4433-a4cd-216b330e942e\",\n    \"data\": {\n        \"email\": \"email@gmail.com,email2@gmail.com\",\n        \"text\": \"not2\",\n        \"image\": \"imageUrl2\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NodeDynamoUrl}}/app/insert-update-dynamnic-table",
+							"host": [
+								"{{NodeDynamoUrl}}"
+							],
+							"path": [
+								"app",
+								"insert-update-dynamnic-table"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteAppTable",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjkzMzk3NDR9.A-WdnekYZJDme-bp4UslC8vkw5os3XWzFcUdi0gw8fU",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"dynamicTable\": \"App1Table1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NodeDynamoUrl}}/app/delete-dynamnic-table",
+							"host": [
+								"{{NodeDynamoUrl}}"
+							],
+							"path": [
+								"app",
+								"delete-dynamnic-table"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InsertAppDataS3",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "s3FileName",
+									"type": "file",
+									"src": "/Users/shoryasaxena/Downloads/salaryslips/naturex27s_canvas_513167.jpg"
+								},
+								{
+									"key": "dynamicTable",
+									"value": "App1Table1",
+									"type": "text"
+								},
+								{
+									"key": "fname",
+									"value": "shorys1122s2a222",
+									"type": "text"
+								},
+								{
+									"key": "lname",
+									"value": "nn123sss",
+									"type": "text"
+								},
+								{
+									"key": "check",
+									"value": "true",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{NodeDynamoUrl}}/app/insert-update-dynamnic-table-s3Upload",
+							"host": [
+								"{{NodeDynamoUrl}}"
+							],
+							"path": [
+								"app",
+								"insert-update-dynamnic-table-s3Upload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateAppDataS3",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "s3FileName",
+									"type": "file",
+									"src": "/Users/shoryasaxena/Downloads/salaryslips/naturex27s_canvas_513167.jpg"
+								},
+								{
+									"key": "dynamicTable",
+									"value": "App1Table1",
+									"type": "text"
+								},
+								{
+									"key": "fname",
+									"value": "update dibe ",
+									"type": "text"
+								},
+								{
+									"key": "lname",
+									"value": "nn123sss",
+									"type": "text"
+								},
+								{
+									"key": "s3FileName",
+									"type": "file",
+									"src": "/Users/shoryasaxena/Downloads/salaryslips/naturex27s_canvas_513167.jpg"
+								},
+								{
+									"key": "check",
+									"value": "true",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "uuid",
+									"value": "d54bf365-dec3-4433-a4cd-216b330e942e",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{NodeDynamoUrl}}/app/insert-update-dynamnic-table-s3Upload",
+							"host": [
+								"{{NodeDynamoUrl}}"
+							],
+							"path": [
+								"app",
+								"insert-update-dynamnic-table-s3Upload"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "CreateAppMapping",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"app_name\":\"ReactApp\",\n    \"app_desc\":\"Will have data for the from ReactApp\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "user",
+			"item": [
+				{
+					"name": "RegisterUsers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"appId\":\"9e8dc532-8411-4a34-8774-ebcec884054b\",\n    \"dynamicTable\": \"ReactAppUser\",\n    \"data\": {\n        \"email\": \"shorya.saxena@gmail.com\",\n        \"password\": \"password\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NodeDynamoUrl}}/app/users-dynamic",
+							"host": [
+								"{{NodeDynamoUrl}}"
+							],
+							"path": [
+								"app",
+								"users-dynamic"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{NodeDynamoUrl}}/app/register",
-					"host": [
-						"{{NodeDynamoUrl}}"
-					],
-					"path": [
-						"app",
-						"register"
-					]
+				{
+					"name": "UpdateUserDynamicData",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"dynamicTable\": \"App1Table1\",\n    \"uuid\":\"d54bf365-dec3-4433-a4cd-216b330e942e\",\n    \"data\": {\n        \"email\": \"kirtesh.suthar15@gmail.com\",\n        \"someOtherData\":\"someOtherData\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NodeDynamoUrl}}/app/users-dynamic",
+							"host": [
+								"{{NodeDynamoUrl}}"
+							],
+							"path": [
+								"app",
+								"users-dynamic"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteUserDynamicData",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjkzMzk3NDR9.A-WdnekYZJDme-bp4UslC8vkw5os3XWzFcUdi0gw8fU",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"dynamicTable\": \"App1Table1\",\n    \"uuid\":\"7719162d-1c2a-42ca-b5ae-5bad491873a3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NodeDynamoUrl}}/app/users-dynamic",
+							"host": [
+								"{{NodeDynamoUrl}}"
+							],
+							"path": [
+								"app",
+								"users-dynamic"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InsertNotes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "s3FileName",
+									"type": "file",
+									"src": "/Users/shoryasaxena/Downloads/naturex27s_canvas_513167.jpg"
+								},
+								{
+									"key": "dynamicTable",
+									"value": "ReactAppUser",
+									"type": "text"
+								},
+								{
+									"key": "emailList",
+									"value": "emailTest1fdfdfff,emailTestsdfsdf",
+									"type": "text"
+								},
+								{
+									"key": "title",
+									"value": "someaTitile198",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "hjhasdbjsadbjd",
+									"type": "text"
+								},
+								{
+									"key": "parentuuid",
+									"value": "0c2a846f-9871-4579-baf1-7bfd948be696",
+									"type": "text"
+								},
+								{
+									"key": "appId",
+									"value": "9e8dc532-8411-4a34-8774-ebcec884054b",
+									"type": "text"
+								},
+								{
+									"key": "notesUuid",
+									"value": "8ba95055-98c8-44e8-ba8f-cbd5d950afe6",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{NodeDynamoUrl}}/app/users-notes",
+							"host": [
+								"{{NodeDynamoUrl}}"
+							],
+							"path": [
+								"app",
+								"users-notes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateNotes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "s3FileName",
+									"type": "file",
+									"src": "/Users/shoryasaxena/Downloads/naturex27s_canvas_513167.jpg"
+								},
+								{
+									"key": "dynamicTable",
+									"value": "ReactAppUser",
+									"type": "text"
+								},
+								{
+									"key": "emailList",
+									"value": "uiui",
+									"type": "text"
+								},
+								{
+									"key": "title",
+									"value": "TestAgainwww",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "dddd",
+									"type": "text"
+								},
+								{
+									"key": "parentuuid",
+									"value": "0c2a846f-9871-4579-baf1-7bfd948be696",
+									"type": "text"
+								},
+								{
+									"key": "appId",
+									"value": "9e8dc532-8411-4a34-8774-ebcec884054b",
+									"type": "text"
+								},
+								{
+									"key": "notesUuid",
+									"value": "15885121-84ef-4421-a974-d3c385c56359",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{NodeDynamoUrl}}/app/users-notes",
+							"host": [
+								"{{NodeDynamoUrl}}"
+							],
+							"path": [
+								"app",
+								"users-notes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteNotes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjkzMzk3NDR9.A-WdnekYZJDme-bp4UslC8vkw5os3XWzFcUdi0gw8fU",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"dynamicTable\": \"ReactAppUser\",\n    \"appId\":\"9e8dc532-8411-4a34-8774-ebcec884054b\",\n    \"parentuuid\":\"0c2a846f-9871-4579-baf1-7bfd948be696\",\n    \"notesUuid\":\"0319daab-42f2-49ec-a97c-d459258daff5\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NodeDynamoUrl}}/app/users-notes",
+							"host": [
+								"{{NodeDynamoUrl}}"
+							],
+							"path": [
+								"app",
+								"users-notes"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "CreateApp",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{accessToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"dynamicTable\": \"ReactAppUser\",\n    \"dynamicColumns\":[\"dd\"]\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{NodeDynamoUrl}}/app/create-dynamnic-table",
-					"host": [
-						"{{NodeDynamoUrl}}"
-					],
-					"path": [
-						"app",
-						"create-dynamnic-table"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "DeleteApp",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{accessToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"dynamicTable\": \"App1Table1\",\n    \"uuid\":\"7719162d-1c2a-42ca-b5ae-5bad491873a3\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{NodeDynamoUrl}}/app/insert-update-dynamnic-table",
-					"host": [
-						"{{NodeDynamoUrl}}"
-					],
-					"path": [
-						"app",
-						"insert-update-dynamnic-table"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "InsertAppData",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{accessToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"dynamicTable\": \"ReactAppUser\",\n    \"data\": {\n        \"email\": \"someEamil@gmail.com\",\n        \"password\": \"password\",\n        \"age\":\"age\",\n        \"gender\":\"gender\"\n    }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{NodeDynamoUrl}}/app/insert-update-dynamnic-table",
-					"host": [
-						"{{NodeDynamoUrl}}"
-					],
-					"path": [
-						"app",
-						"insert-update-dynamnic-table"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "UpdateAppData",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{accessToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"dynamicTable\": \"App1Table1\",\n    \"uuid\":\"d54bf365-dec3-4433-a4cd-216b330e942e\",\n    \"data\": {\n        \"email\": \"email@gmail.com,email2@gmail.com\",\n        \"text\": \"not2\",\n        \"image\": \"imageUrl2\"\n    }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{NodeDynamoUrl}}/app/insert-update-dynamnic-table",
-					"host": [
-						"{{NodeDynamoUrl}}"
-					],
-					"path": [
-						"app",
-						"insert-update-dynamnic-table"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "DeleteAppData",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{accessToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjkzMzk3NDR9.A-WdnekYZJDme-bp4UslC8vkw5os3XWzFcUdi0gw8fU",
-						"type": "text",
-						"disabled": true
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"dynamicTable\": \"App1Table1\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{NodeDynamoUrl}}/app/delete-dynamnic-table",
-					"host": [
-						"{{NodeDynamoUrl}}"
-					],
-					"path": [
-						"app",
-						"delete-dynamnic-table"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "InsertAppDataS3",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{accessToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "s3FileName",
-							"type": "file",
-							"src": "/Users/shoryasaxena/Downloads/salaryslips/naturex27s_canvas_513167.jpg"
-						},
-						{
-							"key": "dynamicTable",
-							"value": "App1Table1",
-							"type": "text"
-						},
-						{
-							"key": "fname",
-							"value": "shorys1122s2a222",
-							"type": "text"
-						},
-						{
-							"key": "lname",
-							"value": "nn123sss",
-							"type": "text"
-						},
-						{
-							"key": "check",
-							"value": "true",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{NodeDynamoUrl}}/app/insert-update-dynamnic-table-s3Upload",
-					"host": [
-						"{{NodeDynamoUrl}}"
-					],
-					"path": [
-						"app",
-						"insert-update-dynamnic-table-s3Upload"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "updateAppDataS3",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{accessToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "s3FileName",
-							"type": "file",
-							"src": "/Users/shoryasaxena/Downloads/salaryslips/naturex27s_canvas_513167.jpg"
-						},
-						{
-							"key": "dynamicTable",
-							"value": "App1Table1",
-							"type": "text"
-						},
-						{
-							"key": "fname",
-							"value": "update dibe ",
-							"type": "text"
-						},
-						{
-							"key": "lname",
-							"value": "nn123sss",
-							"type": "text"
-						},
-						{
-							"key": "s3FileName",
-							"type": "file",
-							"src": "/Users/shoryasaxena/Downloads/salaryslips/naturex27s_canvas_513167.jpg",
-							"disabled": true
-						},
-						{
-							"key": "check",
-							"value": "true",
-							"type": "text",
-							"disabled": true
-						},
-						{
-							"key": "uuid",
-							"value": "d54bf365-dec3-4433-a4cd-216b330e942e",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{NodeDynamoUrl}}/app/insert-update-dynamnic-table-s3Upload",
-					"host": [
-						"{{NodeDynamoUrl}}"
-					],
-					"path": [
-						"app",
-						"insert-update-dynamnic-table-s3Upload"
-					]
-				}
-			},
-			"response": []
+			]
 		},
 		{
 			"name": "Refresh Token",
