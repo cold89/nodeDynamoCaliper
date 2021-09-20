@@ -219,7 +219,7 @@ routes.post("/users-notes",
 
 routes.put("/users-notes",  
   multer({ dest: '/tmp/', limits: { fieldSize: 8 * 1024 * 1024 } })
-  .single('s3FileName'),async (req, res) => {
+  .single('imageUrl'),async (req, res) => {
   try {
     let userToken = fetchToken(req.headers);
     let result = await userController.insertUpdateUsersNotesData(
