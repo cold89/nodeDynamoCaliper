@@ -12,9 +12,9 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // use JWT auth to secure the api
-app.use(jwt());
+// app.use(jwt());
 
-app.use('/user', userRoutes.routes);
+app.use('/app', userRoutes.routes);
 
 // global error handler for routes
 app.use(errorHandler);
