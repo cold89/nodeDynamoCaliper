@@ -184,7 +184,7 @@ const loginUsersDynamicData = async (params, authToken) => {
     let checkAuthroizedUserData = await checkAuthroizedUser({app_id:params.appId});
     let responseDetail = `unauthrozed User`;
   if (checkAuthroizedUserData.length) {
-    responseDetail= await fetchNoteData(params.dynamicTable,authenticated.user_id);
+    responseDetail= await fetchNoteData(params.dynamicTable,authenticated.user_id,params.appId);
     if(!responseDetail){
       throw {messsage:"User Not Found"}
     }
@@ -333,7 +333,7 @@ const updates3MultiPartUpload =async(req,authToken)=>{
   let checkAuthroizedUserData = await checkAuthroizedUser({app_id:params.appId});
   let responseDetail = `unauthrozed User`;
   if (checkAuthroizedUserData.length) {
-    responseDetail= await fetchNoteData(params.dynamicTable,authenticated.user_id);
+    responseDetail= await fetchNoteData(params.dynamicTable,authenticated.user_id,params.appId);
 
   }
   return responseDetail;
@@ -368,7 +368,15 @@ const updates3MultiPartUpload =async(req,authToken)=>{
       app_id:app_id,
       data:{notes:notesObj}
     }
- await processUpdateDynamicData(paramsBody,{},notesDeleteFlag);
+    let paramsReqFileObj={};
+    if(req.file){
+      paramsReqFileObj={
+        isMutliPart:true,
+        reqFileObj:req.file
+      };
+      paramsBody.data.notes[`${notesUuid}`]['imageUrl']=paramsReqFileObj.reqFileObj.originalname;
+    }
+ await processUpdateDynamicData(paramsBody,paramsReqFileObj,notesDeleteFlag);
   } catch (error) {
     throw error;
   }
@@ -404,10 +412,6 @@ const processUpdateDynamicData= async (params,mutliPartObj={},notesDeleteFlag=fa
         await uploads3Bucket({...params ,mutliPartObj});
       }
       if (params.data.notes) {
-        // if(params.data.notes.notesImageUrl){
-        //    //will update the s3 bucket
-        // await uploads3Bucket({...params ,mutliPartObj});
-        // }
         params.data.notes= await processNoteData(params.data.notes,params.dynamicTable,dynamicPrimaryKey,notesDeleteFlag);
       }
 
@@ -472,7 +476,7 @@ const processNoteData= async (notesData,dynamicTable,uuid,notesDeleteFlag=false)
   
 }
 
-const fetchNoteData= async (dynamicTable,uuid)=>{
+const fetchNoteData= async (dynamicTable,uuid,appId=undefined)=>{
   let paramsObj = {
     TableName: dynamicTable,
     FilterExpression: "#uuid=:uuid_value",
@@ -484,7 +488,16 @@ const fetchNoteData= async (dynamicTable,uuid)=>{
     },
   };
   let dynamicTableData = await userProvider.queryData(paramsObj);
-  return dynamicTableData[0];
+  let respData= dynamicTableData[0];
+  if(respData.notes && appId){
+    for (const key in respData.notes) {
+      if(respData.notes[key]['imageUrl'] ){
+        respData.notes[key]['imageUrl']=`nodedynamocaliper/${appId}/dynamicTable/${respData.notes[key]['imageUrl']}`;
+      }
+    }
+    
+  }
+  return respData;
 }
 const deleteDynamicSubUserData = async (params, authToken) => {
   try {

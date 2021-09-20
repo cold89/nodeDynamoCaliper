@@ -517,7 +517,7 @@
 								},
 								{
 									"key": "emailList",
-									"value": "x1,x2",
+									"value": "yogesh",
 									"type": "text"
 								},
 								{
@@ -581,29 +581,23 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "s3FileName",
-									"type": "file",
-									"src": "/Users/shoryasaxena/Downloads/naturex27s_canvas_513167.jpg",
-									"disabled": true
-								},
-								{
 									"key": "dynamicTable",
 									"value": "ReactAppUser",
 									"type": "text"
 								},
 								{
 									"key": "emailList",
-									"value": "uiui",
+									"value": "shoryasaxena",
 									"type": "text"
 								},
 								{
 									"key": "title",
-									"value": "TestAgainwww",
+									"value": "MEan",
 									"type": "text"
 								},
 								{
 									"key": "description",
-									"value": "dddd",
+									"value": "MErn",
 									"type": "text"
 								},
 								{
@@ -613,8 +607,13 @@
 								},
 								{
 									"key": "notesUuid",
-									"value": "93ccdcb7-845a-47f3-b086-3cd23b65a654",
+									"value": "6d2ffb43-9828-41f4-8282-53315821ad84",
 									"type": "text"
+								},
+								{
+									"key": "imageUrl",
+									"type": "file",
+									"src": "/Users/shoryasaxena/Downloads/naturex27s_canvas_513167.jpg"
 								}
 							]
 						},
@@ -692,7 +691,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"dynamicTable\": \"ReactAppUser\",\n    \"appId\":\"9e8dc532-8411-4a34-8774-ebcec884054b\",\n    \"data\": {\n     \"resetTimer\":true \n    }\n}",
+							"raw": "{\n    \"dynamicTable\": \"ReactAppUser\",\n    \"appId\":\"9e8dc532-8411-4a34-8774-ebcec884054b\",\n    \"data\": {\n     \"updateTimerDays\":10\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
