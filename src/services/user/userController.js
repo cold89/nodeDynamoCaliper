@@ -424,7 +424,7 @@ const processUpdateDynamicData= async (params,mutliPartObj={},notesDeleteFlag=fa
         delete(params.data.resetTimer);
       }
       if(params.data.baseTimerDays){
-        params.data.userTimer=await updateBaseTimerDaysData(params,params.data.baseTimerDays);
+        params.data.baseTimerDays=params.data.baseTimerDays;
       }
       let UpdateExpression = `set `;
       let dataMain = Object.keys(params.data);
