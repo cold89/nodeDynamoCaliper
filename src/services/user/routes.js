@@ -54,96 +54,12 @@ routes.post("/create-dynamnic-table", async (req, res) => {
   }
 });
 
-routes.delete("/delete-dynamnic-table", async (req, res) => {
-  try {
-    let authToken = fetchToken(req.headers);
-    let result = await userController.deleteDynamicAppTable(
-      req.body,
-      authToken
-    );
-    res.status(200).json({ msg: `Dynamic AppTable Deletd`, response: result });
-  } catch (error) {
-    res.status(401).json(error);
-  }
-});
-
-routes.post("/insert-update-dynamnic-table", async (req, res) => {
-  try {
-    let authToken = fetchToken(req.headers);
-    let result = await userController.insertAppDynamicData(
-      req.body,
-      authToken
-    );
-    res.status(200).json({ msg: `User Inserted Succfully`, response: result });
-  } catch (error) {
-    res.status(500).json({ error });
-  }
-});
-
-routes.put("/insert-update-dynamnic-table", async (req, res) => {
-  try {
-    let authToken = fetchToken(req.headers);
-    let result = await userController.updateDynamicSubUserData(
-      req.body,
-      authToken
-    );
-    res.status(200).json({ msg: `User Updated Succfully`, response: result });
-  } catch (error) {
-    res.status(500).json({ error });
-  }
-});
-
-routes.delete("/insert-update-dynamnic-table", async (req, res) => {
-  try {
-    let authToken = fetchToken(req.headers);
-    let result = await userController.deleteDynamicSubUserData(
-      req.body,
-      authToken
-    );
-    res
-      .status(200)
-      .json({ msg: `User Record Deleted Succfully`, response: result });
-  } catch (error) {
-    res.status(500).json({ error });
-  }
-});
-
 routes.post("/authenticate", async (req, res) => {
   try {
     let result = await userController.authenticate(req.body.app_id);
     res.status(200).json({ msg: `User Updated Succfully`, response: result });
   } catch (error) {
     res.status(500).json(error);
-  }
-});
-
-routes.post("/insert-update-dynamnic-table-s3Upload", 
-        multer({ dest: '/tmp/', limits: { fieldSize: 8 * 1024 * 1024 } })
-        .single('s3FileName'),async (req, res) => {
-  try {
-    let authToken = fetchToken(req.headers);
-    let result = await userController.s3MultiPartUpload(
-      req,
-      authToken
-    );
-    res.status(200).json({ msg: `s3 upload `, response: result });
-  } catch (error) {
-    res.status(401).json(error);
-  }
-});
-
-routes.put("/insert-update-dynamnic-table-s3Upload", 
-        multer({ dest: '/tmp/', limits: { fieldSize: 8 * 1024 * 1024 } })
-        .single('s3FileName'),async (req, res) => {
-  try {
-    let authToken = fetchToken(req.headers);
-    let result = await userController.updates3MultiPartUpload(
-      req,
-      authToken
-    );
-    res.status(200).json({ msg: `s3 upload `, response: result });
-  } catch (error) {
-    res.status(401).json(error);
   }
 });
 
