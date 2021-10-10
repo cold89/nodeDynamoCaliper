@@ -153,7 +153,7 @@ routes.get("/users-dynamic", async (req, res) => {
   try {
     let userToken = fetchToken(req.headers);
     let result = await userController.loginUsersDynamicData(
-      req.body,
+      req.query,
       userToken
     );
     res.status(200).json({ msg: `User Logged in  Succfully`, response: result });
@@ -182,7 +182,7 @@ routes.put("/users-dynamic", async (req, res) => {
       req.body,
       userToken
     );
-    res.status(200).json({ msg: `User Inserted Succfully`, response: result });
+    res.status(200).json({ msg: `User Updated Succfully`, response: result });
   } catch (error) {
     res.status(500).json({ error });
   }
@@ -203,7 +203,7 @@ routes.get("/users-notes-all", async (req, res) => {
 
 routes.post("/users-notes",  
   multer({ dest: '/tmp/', limits: { fieldSize: 8 * 1024 * 1024 } })
-  .single('s3FileName'),async (req, res) => {
+  .single('imageUrl'),async (req, res) => {
   try {
     let userToken = fetchToken(req.headers);
     let result = await userController.insertUpdateUsersNotesData(
@@ -236,7 +236,7 @@ routes.delete("/users-notes", async (req, res) => {
   try {
     let userToken = fetchToken(req.headers);
     let result = await userController.insertUpdateUsersNotesData(
-    req,
+    {body: req.query},
     userToken,
    true
   );

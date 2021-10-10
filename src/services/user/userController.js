@@ -424,7 +424,7 @@ const processUpdateDynamicData= async (params,mutliPartObj={},notesDeleteFlag=fa
         delete(params.data.resetTimer);
       }
       if(params.data.baseTimerDays){
-        params.data.userTimer=await updateBaseTimerDaysData(params,params.data.baseTimerDays);
+        params.data.baseTimerDays=params.data.baseTimerDays;
       }
       let UpdateExpression = `set `;
       let dataMain = Object.keys(params.data);
@@ -492,7 +492,7 @@ const fetchNoteData= async (dynamicTable,uuid,appId=undefined)=>{
   if(respData.notes && appId){
     for (const key in respData.notes) {
       if(respData.notes[key]['imageUrl'] ){
-        respData.notes[key]['imageUrl']=`nodedynamocaliper/${appId}/dynamicTable/${respData.notes[key]['imageUrl']}`;
+        respData.notes[key]['imageUrl']=`https://nodedynamocaliper.s3.amazonaws.com/${appId}/${dynamicTable}/${respData.notes[key]['imageUrl']}`;
       }
     }
     
