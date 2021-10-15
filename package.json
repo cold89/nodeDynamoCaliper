@@ -4,20 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "sonar":  "node sonar-project.js",
-    "test":  "jest --coverage"
+    "sonar": "node sonar-project.js",
+    "test": "jest --coverage"
   },
   "jest": {
-    "testEnvironment":  "node",
+    "testEnvironment": "node",
     "coveragePathIgnorePatterns": [
-        "/node_modules/"
+      "/node_modules/"
     ],
-    "testResultsProcessor":  "jest-sonar-reporter"
+    "testResultsProcessor": "jest-sonar-reporter"
   },
   "jestSonar": {
-    "reportPath":  "coverage",
-    "reportFile":  "test-reporter.xml",
-    "indent":  4
+    "reportPath": "coverage",
+    "reportFile": "test-reporter.xml",
+    "indent": 4
   },
   "repository": {
     "type": "git",
@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/cold89/nodeDynamoCaliper#readme",
   "dependencies": {
+    "@aws/dynamodb-auto-marshaller": "^0.7.1",
     "aws-serverless-express": "^3.4.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
