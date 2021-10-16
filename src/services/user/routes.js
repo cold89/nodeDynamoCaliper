@@ -17,15 +17,6 @@ routes.get("/health-check", async (req, res) => {
   }
 });
 
-routes.post("/register", async (req, res) => {
-  try {
-    let result = await userController.registerUsers(req.body);
-    res.status(200).json({ msg: `User Registered Succfully`, response: result });
-  } catch (error) {
-    console.log(`User Registery Failed`,error);
-    res.status(500).json(error);
-  }
-});
 
 
 routes.post("/create-dynamnic-table", async (req, res) => {
@@ -43,7 +34,7 @@ routes.post("/create-dynamnic-table", async (req, res) => {
 
 //Below Routing is for USER modules////////////
 
-routes.get("/users-dynamic", async (req, res) => {
+routes.get("/users-dynamic", async (req, res) => {//login user module
   try {
     let userToken = common.fetchToken(req.headers);
     let result = await userController.loginUsers(
@@ -56,7 +47,7 @@ routes.get("/users-dynamic", async (req, res) => {
   }
 });
 
-routes.post("/users-dynamic", async (req, res) => {
+routes.post("/users-dynamic", async (req, res) => {//Register user module
   try {
     let userToken = common.fetchToken(req.headers);
     let result = await userController.registerUsersDynamicData(

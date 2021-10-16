@@ -4,22 +4,6 @@ const config = require("../../config.json");
 const userProvider = require("./providers/userProvider");
 const common=require('./common');
 
-const registerUsers = async (params) => {
-  try {
-    console.log(`registerUsers : Start`, params);
-    let app_id = uuidv4();
-    let tokenDetail = await createJwtToken(app_id);
-    await userProvider.registerUsers({
-      app_id: app_id,
-      authToken: tokenDetail.token,
-      ...params,
-    });
-    console.log(`registerUsers : End`, params);
-    return { app_id: app_id, authToken: tokenDetail.token };
-  } catch (error) {
-    throw error;
-  }
-};
 
 const loginUsers = async (params, authToken) => {
   try {
@@ -47,13 +31,23 @@ const registerUsersDynamicData = async (params, authToken,mutliPartObj={}) => {
     let  currentTimeStamp=Math.floor(Date.now() / 1000);
     params.data.userTimer=`${currentTimeStamp+(24*60*60*3)}`;
     params.data.baseTimerDays=3;
+    params.deleteFlag=false;//for soft delete
+
+    let currentdate = new Date(); 
+    params.createdSyncAt = `${currentdate.getDate()}/
+                 ${(currentdate.getMonth()+1)}/
+                 ${currentdate.getFullYear()}@  
+                 ${currentdate.getHours()} :  
+                 ${currentdate.getMinutes()}: 
+                 ${ currentdate.getSeconds()}`;
+    
     return await processInsertDynamicData(params,mutliPartObj,authenticated.user_id);
   } catch (error) {
     throw error;
   }
 };
 
-const updateUsersDynamicData = async (params, authToken) => {
+const updateUsersDynamicData = async (params,  authToken) => {
   try {
     let authenticated =  common.jwtDecode(authToken);
     params.app_id=params.appId;
@@ -239,9 +233,12 @@ const processNoteData= async (notesData,dynamicTable,uuid,notesDeleteFlag=false)
     let scanNoteData= await fetchNoteData(dynamicTable,uuid);
   if(scanNoteData.notes){
     if(notesDeleteFlag){
-      delete(scanNoteData.notes[`${notesData}`]);
+      // delete(scanNoteData.notes[`${notesData}`]);
+      scanNoteData.notes[`${notesData}`].deleteFlag=true;
       notesData=scanNoteData.notes;
     }else{
+      let notesId=Object.keys(notesData)[0];
+      !(scanNoteData.notes[`${notesId}`])?notesData.deleteFlag=false:null;//will get updated to false for insert
       notesData={...scanNoteData.notes,...notesData};
     }    
   }
@@ -267,7 +264,7 @@ const fetchNoteData= async (dynamicTable,uuid,appId=undefined)=>{
   let respData=  await userProvider.getItemData(paramsObj);
   if(respData.notes && appId){
     for (const key in respData.notes) {
-      if(respData.notes[key]['imageUrl'] ){
+      if(respData.notes[key]['imageUrl'] && !respData.notes[key]['deleteFlag']){
         respData.notes[key]['imageUrl']=`https://nodedynamocaliper.s3.amazonaws.com/${appId}/${dynamicTable}/${respData.notes[key]['imageUrl']}`;
       }
     }
@@ -295,6 +292,7 @@ const checkAuthroizedUser = async (params) => {
   try {
     let paramsObj = {
       TableName: `app_table_mapping`,
+      IndexName: 'mapping_id-app_id-index',
       FilterExpression: "#app_id=:app_id_value",
       ExpressionAttributeNames: {
         "#app_id": "app_id",
@@ -306,14 +304,6 @@ const checkAuthroizedUser = async (params) => {
     return await common.checkAuthroizedUser(paramsObj,  params.dynamicTable);
   } catch (error) {
     throw error;
-  }
-};
-
-const createJwtToken = async (app_id) => {
-  try {
-    return common.jwtSign({ app_id: app_id }, config.secret);
-  } catch (err) {
-    throw err;
   }
 };
 
@@ -391,7 +381,6 @@ const appAuthenticate = async (token) => {
 
 
 module.exports = {
-  registerUsers,
   loginUsers,
   registerUsersDynamicData,
   updateUsersDynamicData,
