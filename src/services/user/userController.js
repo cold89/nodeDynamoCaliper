@@ -31,15 +31,6 @@ const registerUsersDynamicData = async (params, authToken,mutliPartObj={}) => {
     let  currentTimeStamp=Math.floor(Date.now() / 1000);
     params.data.userTimer=`${currentTimeStamp+(24*60*60*3)}`;
     params.data.baseTimerDays=3;
-    params.deleteFlag=false;//for soft delete
-
-    let currentdate = new Date(); 
-    params.createdSyncAt = `${currentdate.getDate()}/
-                 ${(currentdate.getMonth()+1)}/
-                 ${currentdate.getFullYear()}@  
-                 ${currentdate.getHours()} :  
-                 ${currentdate.getMinutes()}: 
-                 ${ currentdate.getSeconds()}`;
     
     return await processInsertDynamicData(params,mutliPartObj,authenticated.user_id);
   } catch (error) {
@@ -196,6 +187,14 @@ const processUpdateDynamicData= async (params,mutliPartObj={},notesDeleteFlag=fa
       if(params.data.baseTimerDays){
         params.data.baseTimerDays=params.data.baseTimerDays;
       }
+      let currentdate = new Date(); 
+      params.data.createdSyncAt = `${currentdate.getDate()}/
+                   ${(currentdate.getMonth()+1)}/
+                   ${currentdate.getFullYear()}@  
+                   ${currentdate.getHours()} :  
+                   ${currentdate.getMinutes()}: 
+                   ${ currentdate.getSeconds()}`;
+
       let UpdateExpression = `set `;
       let dataMain = Object.keys(params.data);
       let ExpressionAttributeValues = {};
