@@ -182,18 +182,12 @@ const processUpdateDynamicData= async (params,mutliPartObj={},notesDeleteFlag=fa
       }
       if(params.data.resetTimer){
         params.data.userTimer =await resetTimerDaysData(params);
+        params.data.timerSetAt = Math.floor(Date.now() / 1000);// for update operation
         delete(params.data.resetTimer);
       }
       if(params.data.baseTimerDays){
         params.data.baseTimerDays=params.data.baseTimerDays;
       }
-      let currentdate = new Date(); 
-      params.data.createdSyncAt = `${currentdate.getDate()}/
-                   ${(currentdate.getMonth()+1)}/
-                   ${currentdate.getFullYear()}@  
-                   ${currentdate.getHours()} :  
-                   ${currentdate.getMinutes()}: 
-                   ${ currentdate.getSeconds()}`;
 
       let UpdateExpression = `set `;
       let dataMain = Object.keys(params.data);

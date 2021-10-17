@@ -91,6 +91,7 @@ routes.post("/users-notes",
   .single('imageUrl'),async (req, res) => {
   try {
     let userToken = common.fetchToken(req.headers);
+    req.body.timerSetAt = Math.floor(Date.now() / 1000);// for insertoperation
     let result = await userController.insertUpdateUsersNotesData(
       req,
       userToken
