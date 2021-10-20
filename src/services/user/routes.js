@@ -122,7 +122,7 @@ routes.delete("/users-notes", async (req, res) => {
   try {
     let userToken = common.fetchToken(req.headers);
     let result = await userController.insertUpdateUsersNotesData(
-    {body: req.body},
+    {body: req.query},
     userToken,
    true
   );
