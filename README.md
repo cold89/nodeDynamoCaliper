@@ -21,6 +21,10 @@
 # User sls deploy command in git hub actions when we merge anythging in development branch in git hub
 
 
+## SonarCube Running
+## 1: execute the file with the command to cerate the server :docker-compose -f docker-compose.sonar.yml up -d
+## localhost:9000/project
+## 2: run command npm run test for coverage
 
 
 # Happy coding

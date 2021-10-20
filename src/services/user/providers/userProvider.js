@@ -144,8 +144,7 @@ const checkTableExists = async (tableName) => {
 };
 const queryData = async (paramsData) => {
   try {
-    let data =(await dynamodbClient.scan(paramsData).promise()).Items || [];
-    return data;
+    return (await dynamodbClient.scan(paramsData).promise()).Items || [];
   } catch (error) {
     throw error;
   }
