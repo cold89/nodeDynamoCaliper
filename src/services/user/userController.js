@@ -257,8 +257,11 @@ const fetchNoteData= async (dynamicTable,uuid,appId=undefined)=>{
   let respData=  await userProvider.getItemData(paramsObj);
   if(respData.notes && appId){
     for (const key in respData.notes) {
-      if(respData.notes[key]['imageUrl'] && !respData.notes[key]['deleteFlag']){
+      if(respData.notes[key]['imageUrl']){
         respData.notes[key]['imageUrl']=`https://nodedynamocaliper.s3.amazonaws.com/${appId}/${dynamicTable}/${respData.notes[key]['imageUrl']}`;
+      }
+      if(respData.notes[key]['deleteFlag']==true){
+        delete respData.notes[key];
       }
     }
     
