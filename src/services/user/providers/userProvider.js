@@ -1,7 +1,7 @@
 const fs = require("fs");
 const request = require("request");
-const AWS = require("aws-sdk");
 
+const AWS = require("aws-sdk");
 AWS.config.update({
   region: "us-east-1",
 });
@@ -145,6 +145,15 @@ const checkTableExists = async (tableName) => {
 const queryData = async (paramsData) => {
   try {
     return (await dynamodbClient.scan(paramsData).promise()).Items || [];
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getItemData = async (paramsData) => {
+  try {
+    let data =(await dynamodb.getItem(paramsData).promise()).Item || [];
+    return AWS.DynamoDB.Converter.unmarshall(data);
   } catch (error) {
     throw error;
   }
@@ -344,6 +353,7 @@ module.exports = {
   deleteDynamicHashKeyTable,
   insertRowData,
   queryData,
+  getItemData,
   updateRowData,
   deleteRowData,
   checkCreates3Bucket,
