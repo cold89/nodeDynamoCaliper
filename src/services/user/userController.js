@@ -144,6 +144,7 @@ const processInsertDynamicData= async (params,mutliPartObj={},customUuid=undefin
         isMutliPart:true,
         reqFileObj:req.file
       };
+      console.log(`DevTest: insertUpdateUsersNotesData: ${JSON.stringify(req.file)}`);
       paramsBody.data.notes[`${notesUuid}`]['imageUrl']=paramsReqFileObj.reqFileObj.originalname;
     }
  await processUpdateDynamicData(paramsBody,paramsReqFileObj,notesDeleteFlag);
@@ -170,7 +171,9 @@ const processUpdateDynamicData= async (params,mutliPartObj={},notesDeleteFlag=fa
     if (checkAuthroizedUserData.length) {
       if (params.data.s3File || mutliPartObj.isMutliPart) {
         //will update the s3 bucket
+        console.log(`DevTest: processUpdateDynamicData: uploads3Bucket : start ${JSON.stringify(mutliPartObj)}`);
         await uploads3Bucket({...params ,mutliPartObj});
+        console.log(`DevTest: processUpdateDynamicData: uploads3Bucket : end`);
       }
       if (params.data.notes) {
         params.data.notes= await processNoteData(params.data.notes,params.dynamicTable,dynamicPrimaryKey,notesDeleteFlag);
@@ -243,7 +246,6 @@ const processNoteData= async (notesData,dynamicTable,uuid,notesDeleteFlag=false)
 }
 
 const fetchNoteData= async (dynamicTable,uuid,appId=undefined)=>{
- 
   try {
     let paramsObj = {
       Key: {

@@ -24,6 +24,9 @@ provider:
   name: aws
   runtime: nodejs12.x
   lambdaHashingVersion: 20201221
+  apiGateway:
+        binaryMediaTypes:
+            - '*/*'
 
 # you can overwrite defaults here
 #  stage: dev
