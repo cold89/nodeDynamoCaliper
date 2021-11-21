@@ -106,7 +106,6 @@ const processInsertDynamicData= async (params,mutliPartObj={},customUuid=undefin
   let responseDetail = `unauthrozed User`;
   if (checkAuthroizedUserData.length) {
     responseDetail= await fetchNoteData(params.dynamicTable,authenticated.user_id,params.appId);
-
   }
   return responseDetail;
    } catch (error) {
@@ -121,7 +120,9 @@ const processInsertDynamicData= async (params,mutliPartObj={},customUuid=undefin
     let dynamicTable=req.body.dynamicTable;
     let parentuuid= authenticated.user_id;
     let app_id=req.body.appId;
-    let notesUuid=(req.body.notesUuid)?req.body.notesUuid:uuidv4(); 
+    
+    let dateTimeStampUuid=  Date.now();//act as UUID for sorting purpose
+    let notesUuid=(req.body.notesUuid)?req.body.notesUuid:dateTimeStampUuid; 
     delete req.body["dynamicTable"];
     delete req.body["parentuuid"];
     delete req.body["appId"];
@@ -234,7 +235,7 @@ const processNoteData= async (notesData,dynamicTable,uuid,notesDeleteFlag=false)
       notesData=scanNoteData.notes;
     }else{
       let notesId=Object.keys(notesData)[0];
-      !(scanNoteData.notes[`${notesId}`])?notesData.deleteFlag=false:null;//will get updated to false for insert
+      !(scanNoteData.notes[`${notesId}`])?notesData[notesId].deleteFlag=false:null;//will get updated to false for insert
       notesData={...scanNoteData.notes,...notesData};
     }    
   }
