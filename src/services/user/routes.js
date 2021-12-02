@@ -1,7 +1,7 @@
 const userController = require("./userController");
 const express = require("express");
 const multer =require('multer');
-
+const https = require('https');
 const routes = express.Router({
   mergeParams: true,
 });
@@ -86,10 +86,22 @@ routes.get("/users-notes-all", async (req, res) => {
   }
 });
 
+
+let storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+      cb(null, '/tmp/');
+   },
+  filename: function (req, file, cb) {
+      cb(null , file.originalname);
+  }
+});
+
 routes.post("/users-notes",  
-  multer({ dest: '/tmp/', limits: { fieldSize: 8 * 1024 * 1024 } })
+  // multer({ dest: '/tmp/', limits: { fieldSize: 8 * 1024 * 1024 } })
+  multer({storage })
   .single('imageUrl'),async (req, res) => {
   try {
+    console.log(`DetvTest for multer`)
     let userToken = common.fetchToken(req.headers);
     req.body.timerSetAt = Math.floor(Date.now() / 1000);// for insertoperation
     let result = await userController.insertUpdateUsersNotesData(
@@ -133,5 +145,5 @@ routes.delete("/users-notes", async (req, res) => {
 });
 
 module.exports = {
-  routes,
+  routes
 };

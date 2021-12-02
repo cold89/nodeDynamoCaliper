@@ -222,9 +222,9 @@ const uploadS3Bucket = async ({ params,bucketName }) => {
     // Create the file and get Data from API and update the file with that API data
     
     tempFileName = `/tmp/file.jpg`;
-    console.log(`uploadS3Bucket: Wrtie Stream Strarted`);
+    console.log(`DevTest: uploadS3Bucket: Wrtie Stream Strarted`);
     await mainFunctionPromises(params, tempFileName);
-    console.log(`uploadS3Bucket: Wrtie Stream Completed`);
+    console.log(`DevTest: uploadS3Bucket: Wrtie Stream Completed`);
     // Read content from the file
     s3PathArray = params.data.s3File.split("/");
     orignalFileName=s3PathArray[s3PathArray.length - 1];
@@ -237,16 +237,11 @@ const uploadS3Bucket = async ({ params,bucketName }) => {
 
     s3folderPath = `${params.app_id}/${params.dynamicTable}/${orignalFileName}`;
 
-    console.log(`uploadS3Bucket: readStreamData Stream started`);
-    readStream = await readStreamData(tempFileName);
-    console.log(`uploadS3Bucket: readStreamData Completed`);
-    // Setting up S3 upload parameters
-
-   
+    // Setting up S3 upload parameters   
     const paramsData = {
       Bucket: bucketName,
       Key: s3folderPath, // File name you want to save as in S3
-      Body: readStream,
+      Body: fs.createReadStream(tempFileName),
       ACL: `public-read-write`,
     };
 
@@ -285,32 +280,12 @@ const requestApi = (params, tempFileName) => {
     const fileWriteStream = fs.createWriteStream(tempFileName);
     let writeStreamData = request(params.data.s3File).pipe(fileWriteStream);
     writeStreamData.on("close", (data) => {
-      console.log("request finished downloading file");
+      console.log("DevTest: request finished downloading file");
       resolve(data);
     });
   });
 };
 
-const readStreamData = (fileName) => {
-  return new Promise((resolve, rejects) => {
-    let readStream = fs.createReadStream(fileName);
-    let chunks = [];
-    readStream.on("data", function (chunk) {
-      chunks.push(chunk);
-    });
-
-    // File is done being read
-    readStream.on("end", () => {
-      // Create a buffer of the image from the stream
-      resolve(Buffer.concat(chunks));
-    });
-
-    // This catches any errors that happen while creating the readable stream (usually invalid names)
-    readStream.on("error", function (err) {
-      rejects(err);
-    });
-  });
-};
 
 const multipPartUploadS3Bucket = async (req) => {
   try {
